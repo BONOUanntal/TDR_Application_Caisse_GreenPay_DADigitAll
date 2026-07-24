@@ -8,4 +8,6 @@ const api = axios.create({
   },
 });
 
+// const response = await api.get('/requests');
+
 export default api;
