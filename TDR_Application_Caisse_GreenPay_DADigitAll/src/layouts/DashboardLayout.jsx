@@ -3,11 +3,15 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 
 export default function DashboardLayout() {
+    const user = {
+    name: "Alice",
+    role: "manager",
+  };
   return (
     <div className="flex h-screen">
 
       {/* Sidebar à gauche */}
-      <Sidebar />
+      <Sidebar role={user.role} />
 
       {/* Partie droite */}
       <div className="flex flex-col flex-1">
