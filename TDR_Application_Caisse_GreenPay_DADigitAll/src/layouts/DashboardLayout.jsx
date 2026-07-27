@@ -1,20 +1,25 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
 
 export default function DashboardLayout() {
   return (
-    <div className="flex min-h-screen">
-      <aside className="w-64 bg-gray-900 text-white p-4">
-        <nav className="space-y-2">
-          <Link to="/dashboard" className="block">Dashboard</Link>
-          <Link to="/requests" className="block">Demandes</Link>
-          <Link to="/cashboxes" className="block">Caisses</Link>
-          <Link to="/loans" className="block">Emprunts</Link>
-        </nav>
-      </aside>
+    <div className="flex h-screen">
 
-      <main className="flex-1 p-6 bg-gray-50">
-        <Outlet />
-      </main>
+      {/* Sidebar à gauche */}
+      <Sidebar />
+
+      {/* Partie droite */}
+      <div className="flex flex-col flex-1">
+
+        <Header />
+
+        <main className="flex-1 bg-gray-100 p-6 overflow-auto">
+          <Outlet />
+        </main>
+
+      </div>
+
     </div>
   );
 }

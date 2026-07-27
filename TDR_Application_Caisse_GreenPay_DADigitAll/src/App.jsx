@@ -1,14 +1,5 @@
-import { useEffect } from 'react';
-import api from './services/api';
+import AppRoutes from "./routes/AppRoutes";
 
-function App() {
-  useEffect(() => {
-    api.get('/health')
-      .then(res => console.log(res.data))
-      .catch(err => console.error(err));
-  }, []);
-
-  return <h1>GreenPay Caisse</h1>;
+export default function App() {
+  return <AppRoutes />;
 }
-
-export default App;
