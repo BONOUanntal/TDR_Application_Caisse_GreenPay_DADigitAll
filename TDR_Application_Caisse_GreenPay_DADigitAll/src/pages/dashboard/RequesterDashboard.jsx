@@ -1,28 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import api from "../../services/api";
 
 import NewRequestButton from "../../components/requester/NewRequestButton";
 import NewRequestForm from "../../components/requester/NewRequestForm";
 import RequestHistory from "../../components/requester/RequestHistory";
 
-import { mockRequests } from "../../data/mockRequests";
+// import { mockRequests } from "../../data/mockRequests";
 
 export default function RequesterDashboard() {
 
-    const [showForm, setShowForm] = useState(false);
+    async function fetchRequests() {
 
-    // Toutes les demandes sont stockées ici
-    const [requests, setRequests] = useState(mockRequests);
+        try {
+            const response = await api.get("/demandes");
+            setRequests(response.data);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
 
-    function addRequest(newRequest) {
+    useEffect(() => {
 
-        setRequests([
-            newRequest,
-            ...requests,
-        ]);
+        fetchRequests();
+
+    }, []);
+
+    async function addRequest() {
+
+        await fetchRequests();
 
         setShowForm(false);
 
     }
+
+    const [showForm, setShowForm] = useState(false);
+
+    // Toutes les demandes sont stockées ici
+    const [requests, setRequests] = useState([]);
 
     return (
 

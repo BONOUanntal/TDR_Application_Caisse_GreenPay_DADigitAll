@@ -45,13 +45,11 @@ export function AuthProvider({ children }) {
 
     return (
         <AuthContext.Provider
-
             value={{
                 auth,
                 login,
                 logout,
             }}
-
         >
             {children}
         </AuthContext.Provider>

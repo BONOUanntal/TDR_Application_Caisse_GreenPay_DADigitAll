@@ -26,6 +26,8 @@ export default function LoginPage() {
                 password,
             });
 
+            console.log(response.data);
+
             login(response.data);
             navigate("/dashboard");
         }

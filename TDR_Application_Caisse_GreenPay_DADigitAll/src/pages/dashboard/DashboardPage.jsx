@@ -10,13 +10,13 @@ export default function DashboardPage() {
 
     switch (auth.role) {
 
-        case "requester":
+        case "demandeur":
             return <RequesterDashboard />;
 
-        case "manager":
+        case "gestionnaire":
             return <ManagerDashboard />;
 
-        case "supervisor":
+        case "superviseur":
             return <SupervisorDashboard />;
 
         default:

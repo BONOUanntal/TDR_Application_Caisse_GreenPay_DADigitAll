@@ -1,23 +1,30 @@
 import { useState } from "react";
+import api from "../../services/api";
 
 export default function NewRequestForm({ onClose, onAddRequest }) {
 
     const [motif, setMotif] = useState("");
-    const [montant, setMontant] = useState("");
+    const [montantEstime, setMontantEstime] = useState("");
+    const { auth } = useAuth();
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
 
         e.preventDefault();
 
-        const newRequest = {
-            id: Date.now(),
-            motif,
-            montant,
-            statut: "En attente",
-            date: new Date().toLocaleDateString(),
-        };
+        try {
 
-        onAddRequest(newRequest);
+            const response = await api.post("/demandes", {
+                motif,
+                montant_estime: montantEstime,
+            });
+
+            onAddRequest(response.data);
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
 
     }
 
@@ -67,8 +74,8 @@ export default function NewRequestForm({ onClose, onAddRequest }) {
                     <input
                         type="number"
                         className="w-full border rounded-lg p-3"
-                        value={montant}
-                        onChange={(e) => setMontant(e.target.value)}
+                        value={montantEstime}
+                        onChange={(e) => setMontantEstime(e.target.value)}
                     />
 
                 </div>
@@ -81,7 +88,7 @@ export default function NewRequestForm({ onClose, onAddRequest }) {
 
                     <input
                         disabled
-                        value="GreenPay"
+                        value={auth.user.entreprise.nom}
                         className="w-full border rounded-lg p-3 bg-gray-100"
                     />
 
