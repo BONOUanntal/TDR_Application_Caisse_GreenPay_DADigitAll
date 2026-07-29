@@ -1,20 +1,16 @@
 export const mockRequests = [
   {
     id: 1,
-    requester: 'Alice',
-    company: 'GreenPay',
-    title: 'Carburant',
-    amount: 15000,
-    status: 'submitted',
-    created_at: '2026-07-20',
+    motif: "Carburant",
+    montant: 25000,
+    statut: "En attente",
+    date: "27 juillet 2026",
   },
   {
     id: 2,
-    requester: 'Bob',
-    company: 'DA DIGIT ALL',
-    title: 'Achat souris',
-    amount: 8000,
-    status: 'approved',
-    created_at: '2026-07-19',
+    motif: "Papeterie",
+    montant: 18000,
+    statut: "Validée",
+    date: "24 juillet 2026",
   },
 ];

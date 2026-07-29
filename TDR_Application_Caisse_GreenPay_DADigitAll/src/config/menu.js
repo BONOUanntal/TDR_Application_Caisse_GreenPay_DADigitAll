@@ -1,8 +1,6 @@
 const menus = {
   requester: [
     { label: "Dashboard", path: "/dashboard" },
-    { label: "Mes demandes", path: "/requests" },
-    { label: "Nouvelle demande", path: "/requests/new" },
   ],
 
   manager: [
@@ -14,6 +12,7 @@ const menus = {
 
   supervisor: [
     { label: "Dashboard", path: "/dashboard" },
+    { label: "Demandes", path: "/requests" },
     { label: "Rapports", path: "/reports" },
     { label: "Statistiques", path: "/statistics" },
   ],

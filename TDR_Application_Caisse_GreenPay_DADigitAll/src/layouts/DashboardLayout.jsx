@@ -3,27 +3,27 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 
 export default function DashboardLayout() {
-    const user = {
-    name: "Alice",
-    role: "manager",
-  };
-  return (
-    <div className="flex h-screen">
 
-      {/* Sidebar à gauche */}
-      <Sidebar role={user.role} />
+    return (
 
-      {/* Partie droite */}
-      <div className="flex flex-col flex-1">
+        <div className="flex h-screen">
 
-        <Header />
+            <Sidebar />
 
-        <main className="flex-1 bg-gray-100 p-6 overflow-auto">
-          <Outlet />
-        </main>
+            <div className="flex flex-col flex-1">
 
-      </div>
+                <Header />
 
-    </div>
-  );
+                <main className="flex-1 bg-gray-100 p-6 overflow-auto">
+
+                    <Outlet />
+
+                </main>
+
+            </div>
+
+        </div>
+
+    );
+
 }
