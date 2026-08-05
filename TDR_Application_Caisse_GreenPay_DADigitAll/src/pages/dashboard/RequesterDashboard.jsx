@@ -5,46 +5,33 @@ import NewRequestButton from "../../components/requester/NewRequestButton";
 import NewRequestForm from "../../components/requester/NewRequestForm";
 import RequestHistory from "../../components/requester/RequestHistory";
 
-// import { mockRequests } from "../../data/mockRequests";
-
 export default function RequesterDashboard() {
 
-    async function fetchRequests() {
+    const [showForm, setShowForm] = useState(false);
+    const [requests, setRequests] = useState([]);
 
+    async function fetchRequests() {
         try {
-            const response = await api.get("/demandes");
+            const response = await api.get("/demandes/mes-demandes");
             setRequests(response.data);
-        }
-        catch (error) {
-            console.error(error);
+        } catch (error) {
+            console.error(error.response?.data || error);
         }
     }
 
     useEffect(() => {
-
         fetchRequests();
-
     }, []);
 
     async function addRequest() {
-
         await fetchRequests();
-
         setShowForm(false);
-
     }
 
-    const [showForm, setShowForm] = useState(false);
-
-    // Toutes les demandes sont stockées ici
-    const [requests, setRequests] = useState([]);
-
     return (
-
         <div className="max-w-5xl mx-auto">
 
             <div className="mb-8">
-
                 <h1 className="text-3xl font-bold">
                     Mes dépenses
                 </h1>
@@ -52,15 +39,12 @@ export default function RequesterDashboard() {
                 <p className="text-gray-500">
                     Retrouvez toutes vos demandes.
                 </p>
-
             </div>
 
             {!showForm ? (
-
                 <NewRequestButton
                     onClick={() => setShowForm(true)}
                 />
-
             ) : (
                 <NewRequestForm
                     onClose={() => setShowForm(false)}
@@ -68,12 +52,8 @@ export default function RequesterDashboard() {
                 />
             )}
 
-            <RequestHistory
-                requests={requests}
-            />
+            <RequestHistory requests={requests} />
 
         </div>
-
     );
-
 }

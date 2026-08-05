@@ -12,8 +12,6 @@ export default function AppRoutes() {
 
     return (
 
-        <BrowserRouter>
-
             <Routes>
 
                 <Route path="/" element={<LoginPage />} />
@@ -39,9 +37,6 @@ export default function AppRoutes() {
                 </Route>
 
             </Routes>
-
-        </BrowserRouter>
-
     );
 
 }
