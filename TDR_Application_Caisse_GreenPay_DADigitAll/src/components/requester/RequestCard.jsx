@@ -13,7 +13,7 @@ export default function RequestCard({ request }) {
                     </h3>
 
                     <p className="text-gray-500">
-                        {request.date}
+                        {new Date(request.created_at).toLocaleDateString("fr-FR")}
                     </p>
 
                 </div>
@@ -21,7 +21,7 @@ export default function RequestCard({ request }) {
                 <div className="text-right">
 
                     <p className="font-bold">
-                        {request.montant} FCFA
+                        {Number(request.montant_estime).toLocaleString("fr-FR")} FCFA
                     </p>
 
                     <span>

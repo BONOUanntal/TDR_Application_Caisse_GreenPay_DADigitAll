@@ -16,12 +16,12 @@ export default function ManagerDashboard() {
 
         try {
 
-            // const [caissesRes, demandesRes] = await Promise.all([
-            //     api.get("/caisses"),
-            //     api.get("/demandes/en-attente"),
-            // ]);
+            const [caissesRes, demandesRes] = await Promise.all([
+                api.get("/caisses"),
+                api.get("/demandes/en-attente"),
+            ]);
 
-            const caissesRes = await api.get("/caisses");
+            // const caissesRes = await api.get("/caisses");
 
             console.log(caissesRes.data);
 
@@ -31,11 +31,39 @@ export default function ManagerDashboard() {
             console.log("Data :", caissesRes.data);
             console.log("Demandes :", demandesRes.data);
 
-            // setCaisses(caissesRes.data);
-            // setDemandes(demandesRes.data);
+            setCaisses(caissesRes.data);
+            setDemandes(demandesRes.data);
 
         } catch (error) {
             console.error("Erreur API :", error);
+        }
+    }
+
+    async function handleValidate(id) {
+        try {
+            console.log(`/demandes/${id}/valider`);
+
+            await api.post(`/demandes/${id}/valider`);
+
+            fetchDashboard();
+
+        } catch (error) {
+            console.log(error.response);
+            console.log(error.response?.data);
+        }
+    }
+
+    async function handleReject(id) {
+        try {
+
+            await api.post(`/demandes/${id}/rejeter`);
+
+            fetchDashboard();
+
+        } catch (error) {
+
+            console.error(error);
+
         }
     }
 
@@ -53,7 +81,11 @@ export default function ManagerDashboard() {
 
             <AlertSoldeInsuffisant />
 
-            <PendingRequests demandes={demandes} />
+            <PendingRequests
+                demandes={demandes}
+                onValidate={handleValidate}
+                onReject={handleReject}
+            />
 
             <QuickActions />
 

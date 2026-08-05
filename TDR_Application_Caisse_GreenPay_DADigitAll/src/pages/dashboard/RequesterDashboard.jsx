@@ -13,6 +13,7 @@ export default function RequesterDashboard() {
     async function fetchRequests() {
         try {
             const response = await api.get("/demandes/mes-demandes");
+            console.log(response.data);
             setRequests(response.data);
         } catch (error) {
             console.error(error.response?.data || error);
