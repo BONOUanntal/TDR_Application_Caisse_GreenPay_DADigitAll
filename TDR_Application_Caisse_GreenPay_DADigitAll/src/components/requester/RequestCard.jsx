@@ -101,7 +101,10 @@ export default function RequestCard({ request, onProofUploaded }) {
                     request.statut === "preuve_rejetee") && (
 
                     <button
-                        onClick={() => setShowProofModal(true)}
+                        onClick={() => {
+                            console.log("clic détecté, showProofModal avant :", showProofModal);
+                            setShowProofModal(true);
+                        }}
                         className="mt-5 bg-blue-600 text-white px-5 py-2 rounded-lg"
                     >
                         Déposer une preuve

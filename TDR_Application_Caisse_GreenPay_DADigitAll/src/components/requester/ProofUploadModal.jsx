@@ -1,78 +1,86 @@
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
 import {
-
     Modal,
     ModalContent,
     ModalHeader,
     ModalBody,
     ModalFooter,
-
     Input,
-
     Button,
-
 } from "@heroui/react";
 
 import api from "../../services/api";
 
 export default function ProofUploadModal({
-
     isOpen,
-
     onClose,
-
     request,
-
     onSuccess,
-
 }) {
 
     const [montant, setMontant] = useState("");
-
     const [preuve, setPreuve] = useState(null);
-
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+
+        if (!isOpen) {
+            setMontant("");
+            setPreuve(null);
+            setError("");
+        }
+
+    }, [isOpen]);
 
     async function handleSubmit() {
 
-        const formData = new FormData();
+        if (!montant) {
+            setError("Veuillez saisir le montant réel.");
+            return;
+        }
 
-        formData.append("montant_reel", montant);
-
-        formData.append("preuve", preuve);
-
-        setLoading(true);
+        if (!preuve) {
+            setError("Veuillez choisir un justificatif.");
+            return;
+        }
 
         try {
 
+            setLoading(true);
+            setError("");
+
+            const formData = new FormData();
+
+            formData.append("montant_reel", montant);
+            formData.append("preuve", preuve);
+
             await api.post(
-
                 `/demandes/${request.id}/preuve`,
-
                 formData,
-
                 {
-
                     headers: {
-
                         "Content-Type": "multipart/form-data",
-
                     },
-
                 }
-
             );
 
             onSuccess();
 
-        } catch (error) {
+        } catch (err) {
 
-            console.error(error);
+            console.error(err);
+
+            setError(
+                err.response?.data?.message ??
+                "Une erreur est survenue."
+            );
+
+        } finally {
+
+            setLoading(false);
 
         }
-
-        setLoading(false);
 
     }
 
@@ -80,10 +88,13 @@ export default function ProofUploadModal({
 
         <Modal
             isOpen={isOpen}
-            onOpenChange={onClose}
+            onClose={onClose}
+            placement="center"
+            backdrop="blur"
+            size="md"
         >
 
-            <ModalContent>
+            <ModalContent className="bg-white">
 
                 <ModalHeader>
 
@@ -91,31 +102,55 @@ export default function ProofUploadModal({
 
                 </ModalHeader>
 
-                <ModalBody>
+                <ModalBody className="space-y-5">
 
                     <Input
-
-                        label="Montant réel"
-
                         type="number"
-
                         value={montant}
-
                         onValueChange={setMontant}
-
                     />
 
                     <input
-
                         type="file"
+                        accept="image/*,.pdf"
+                        onChange={(e) => {
 
-                        accept="image/*"
+                            if (e.target.files.length > 0) {
+                                setPreuve(e.target.files[0]);
+                            }
 
-                        onChange={(e) =>
-                            setPreuve(e.target.files[0])
-                        }
-
+                        }}
+                        className="block w-full text-sm
+                        file:mr-4
+                        file:px-4
+                        file:py-2
+                        file:rounded-lg
+                        file:border-0
+                        file:bg-blue-600
+                        file:text-white
+                        file:cursor-pointer
+                        cursor-pointer"
                     />
+
+                    {preuve && (
+
+                        <div className="rounded-lg bg-gray-100 p-3 text-sm">
+
+                            📎 {preuve.name}
+
+                        </div>
+
+                    )}
+
+                    {error && (
+
+                        <div className="rounded-lg bg-red-100 border border-red-300 p-3 text-red-600 text-sm">
+
+                            {error}
+
+                        </div>
+
+                    )}
 
                 </ModalBody>
 
@@ -125,23 +160,15 @@ export default function ProofUploadModal({
                         variant="light"
                         onPress={onClose}
                     >
-
                         Annuler
-
                     </Button>
 
                     <Button
-
                         color="primary"
-
                         isLoading={loading}
-
                         onPress={handleSubmit}
-
                     >
-
-                        Envoyer
-
+                        Envoyer la preuve
                     </Button>
 
                 </ModalFooter>

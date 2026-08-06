@@ -4,6 +4,7 @@ import api from "../../services/api";
 import NewRequestButton from "../../components/requester/NewRequestButton";
 import NewRequestForm from "../../components/requester/NewRequestForm";
 import RequestHistory from "../../components/requester/RequestHistory";
+import ProofUploadModal from "../../components/requester/ProofUploadModal";
 
 export default function RequesterDashboard() {
 
@@ -82,7 +83,6 @@ export default function RequesterDashboard() {
                 requests={requests}
                 onProofUploaded={fetchRequests}
             />
-
         </div>
     );
 }

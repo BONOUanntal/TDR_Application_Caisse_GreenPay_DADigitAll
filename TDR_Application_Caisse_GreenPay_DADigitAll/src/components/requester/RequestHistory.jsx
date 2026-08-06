@@ -1,4 +1,5 @@
 import RequestCard from "./RequestCard";
+import ProofUploadModal from "./ProofUploadModal"
 
 export default function RequestHistory({
     requests,
