@@ -1,29 +1,23 @@
 import RequestCard from "./RequestCard";
 
-export default function RequestHistory({ requests }) {
+export default function RequestHistory({
+    requests,
+    onProofUploaded,
+}) {
 
     return (
 
-        <div>
+        <div className="space-y-4">
 
-            <h2 className="text-xl font-semibold mb-4">
+            {requests.map((request) => (
 
-                Historique des demandes
+                <RequestCard
+                    key={request.id}
+                    request={request}
+                    onProofUploaded={onProofUploaded}
+                />
 
-            </h2>
-
-            <div className="space-y-4">
-
-                {requests.map(request => (
-
-                    <RequestCard
-                        key={request.id}
-                        request={request}
-                    />
-
-                ))}
-
-            </div>
+            ))}
 
         </div>
 

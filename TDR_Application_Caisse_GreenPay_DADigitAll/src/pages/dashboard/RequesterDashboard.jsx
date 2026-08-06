@@ -10,6 +10,16 @@ export default function RequesterDashboard() {
     const [showForm, setShowForm] = useState(false);
     const [requests, setRequests] = useState([]);
 
+    const activeStatuses = [
+        "en_attente",
+        "acceptee",
+        "preuve_envoyee",
+    ];
+
+    const hasActiveRequest = requests.some(request =>
+        activeStatuses.includes(request.statut)
+    );
+
     async function fetchRequests() {
         try {
             const response = await api.get("/demandes/mes-demandes");
@@ -42,18 +52,36 @@ export default function RequesterDashboard() {
                 </p>
             </div>
 
-            {!showForm ? (
+            {!hasActiveRequest && !showForm && (
                 <NewRequestButton
                     onClick={() => setShowForm(true)}
                 />
-            ) : (
+            )}
+
+            {showForm && (
                 <NewRequestForm
                     onClose={() => setShowForm(false)}
                     onAddRequest={addRequest}
                 />
             )}
 
-            <RequestHistory requests={requests} />
+            {hasActiveRequest && !showForm && (
+                <div className="mb-8 rounded-xl border border-amber-200 bg-amber-50 p-5">
+                    <h3 className="font-semibold text-amber-700">
+                        Une demande est déjà en cours
+                    </h3>
+
+                    <p className="text-sm text-amber-600 mt-2">
+                        Vous pourrez créer une nouvelle demande lorsque votre demande actuelle
+                        sera terminée ou rejetée.
+                    </p>
+                </div>
+            )}
+
+            <RequestHistory
+                requests={requests}
+                onProofUploaded={fetchRequests}
+            />
 
         </div>
     );

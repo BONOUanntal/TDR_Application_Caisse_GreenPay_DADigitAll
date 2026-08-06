@@ -1,17 +1,27 @@
 export default function PendingRequests({
     demandes,
-    onValidate,
+    onAccept,
     onReject,
 }) {
     return (
         <div className="bg-white rounded-xl shadow p-6">
-            <h2 className="text-xl font-semibold mb-4">
-                Demandes en attente
+
+            <h2 className="text-xl font-semibold">
+                Demandes à traiter
             </h2>
 
+            <p className="text-gray-500 mb-5">
+                Acceptez ou refusez les nouvelles demandes de dépenses.
+            </p>
+
             {demandes.length === 0 ? (
-                <p>Aucune demande en attente.</p>
+
+                <p className="text-gray-500">
+                    Aucune demande en attente.
+                </p>
+
             ) : (
+
                 <div className="space-y-4">
 
                     {demandes.map((demande) => (
@@ -35,32 +45,36 @@ export default function PendingRequests({
 
                                 </div>
 
-                                <p className="mt-2">
+                                <p className="mt-2 text-gray-700">
                                     {demande.motif}
+                                </p>
+
+                                <p className="text-sm text-gray-500 mt-1">
+                                    {new Date(demande.created_at).toLocaleDateString("fr-FR")}
                                 </p>
 
                             </div>
 
                             <div className="text-right">
 
-                                <p className="font-bold text-lg mb-3">
+                                <p className="font-bold text-lg mb-4">
                                     {Number(demande.montant_estime).toLocaleString("fr-FR")} FCFA
                                 </p>
 
-                                <div className="flex gap-2 justify-end">
+                                <div className="flex gap-3 justify-end">
 
                                     <button
-                                        onClick={() => onValidate(demande.id)}
-                                        className="bg-green-600 text-white px-4 py-2 rounded-lg"
+                                        onClick={() => onAccept(demande.id)}
+                                        className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg"
                                     >
-                                        Valider
+                                        Accepter
                                     </button>
 
                                     <button
                                         onClick={() => onReject(demande.id)}
-                                        className="border border-red-500 text-red-500 px-4 py-2 rounded-lg"
+                                        className="border border-red-500 text-red-500 hover:bg-red-50 px-5 py-2 rounded-lg"
                                     >
-                                        Rejeter
+                                        Refuser
                                     </button>
 
                                 </div>
@@ -72,7 +86,9 @@ export default function PendingRequests({
                     ))}
 
                 </div>
+
             )}
+
         </div>
     );
 }

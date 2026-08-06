@@ -5,20 +5,23 @@ import StatsCards from "../../components/manager/StatsCards";
 import AlertSoldeInsuffisant from "../../components/manager/AlertSoldeInsuffisant";
 import PendingRequests from "../../components/manager/requests/PendingRequests";
 import QuickActions from "../../components/manager/actions/QuickActions";
+import PendingProofs from "../../components/manager/proofs/PendingProofs";
 import api from "../../services/api";
 
 export default function ManagerDashboard() {
   const [caisses, setCaisses] = useState([]);
   const [demandes, setDemandes] = useState([]);
+  const [preuves, setPreuves] = useState([]);
 
   async function fetchDashboard() {
         console.log("fetchDashboard appelé");
 
         try {
 
-            const [caissesRes, demandesRes] = await Promise.all([
+            const [caissesRes, demandesRes, preuvesRes] = await Promise.all([
                 api.get("/caisses"),
                 api.get("/demandes/en-attente"),
+                api.get("/preuves/en-attente"),
             ]);
 
             // const caissesRes = await api.get("/caisses");
@@ -26,29 +29,27 @@ export default function ManagerDashboard() {
             console.log(caissesRes.data);
 
             setCaisses(caissesRes.data);
+            setDemandes(demandesRes.data);
+            setPreuves(preuvesRes.data);
 
             console.log("Réponse complète :", caissesRes);
             console.log("Data :", caissesRes.data);
             console.log("Demandes :", demandesRes.data);
-
-            setCaisses(caissesRes.data);
-            setDemandes(demandesRes.data);
 
         } catch (error) {
             console.error("Erreur API :", error);
         }
     }
 
-    async function handleValidate(id) {
+    async function handleAccept(id) {
         try {
-            console.log(`/demandes/${id}/valider`);
 
-            await api.post(`/demandes/${id}/valider`);
+            await api.post(`/demandes/${id}/accepter`);
 
             fetchDashboard();
 
         } catch (error) {
-            console.log(error.response);
+            console.log(error);
             console.log(error.response?.data);
         }
     }
@@ -64,6 +65,24 @@ export default function ManagerDashboard() {
 
             console.error(error);
 
+        }
+    }
+
+    async function handleValidateProof(id) {
+        try {
+            await api.post(`/preuves/${id}/valider`);
+            fetchDashboard();
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function handleRejectProof(id) {
+        try {
+            await api.post(`/preuves/${id}/rejeter`);
+            fetchDashboard();
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -83,8 +102,14 @@ export default function ManagerDashboard() {
 
             <PendingRequests
                 demandes={demandes}
-                onValidate={handleValidate}
+                onAccept={handleAccept}
                 onReject={handleReject}
+            />
+
+            <PendingProofs
+                preuves={preuves}
+                onValidate={handleValidateProof}
+                onReject={handleRejectProof}
             />
 
             <QuickActions />
