@@ -8,7 +8,6 @@ import DashboardFilters from "../../components/Supervisor/filters/DashboardFilte
 import RequestsTable from "../../components/Supervisor/requests/RequestsTable";
 import IntercashLoans from "../../components/Supervisor/loans/IntercashLoans";
 
-
 export default function SupervisorDashboard() {
 
     const [caisses, setCaisses] = useState([]);
@@ -33,19 +32,30 @@ export default function SupervisorDashboard() {
                 api.get("/caisses"),
                 api.get("/rapports/tableau-de-bord"),
                 api.get("/rapports"),
-                api.get("/emprunts"),
+                // api.get("/emprunts"),
             ]);
 
             setCaisses(caissesRes.data);
+
             setStats(statsRes.data);
-            setDemandes(demandesRes.data);
-            console.log("Demandes :", demandesRes.data);
-            console.log("Caisses :", caissesRes.data);
+
+            setDemandes(demandesRes.data.demandes ?? []);
+
             setEmprunts(empruntsRes.data);
+
+            console.log("Caisses :", caissesRes.data);
+
+            console.log(
+                "Demandes :",
+                demandesRes.data.demandes ?? []
+            );
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "Erreur lors du chargement du dashboard :",
+                error
+            );
 
         }
 
@@ -56,6 +66,32 @@ export default function SupervisorDashboard() {
         fetchDashboard();
 
     }, []);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Caisses filtrées par entreprise
+    |--------------------------------------------------------------------------
+    */
+
+    const filteredCaisses = caisses.filter((caisse) => {
+
+        // Si "Toutes" est sélectionné,
+        // on garde toutes les caisses.
+        if (entreprise === "Toutes") {
+            return true;
+        }
+
+        // Sinon on garde uniquement
+        // la caisse de l'entreprise sélectionnée.
+        return caisse?.entreprise?.nom === entreprise;
+
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Demandes filtrées
+    |--------------------------------------------------------------------------
+    */
 
     const filteredDemandes = demandes.filter((demande) => {
 
@@ -85,10 +121,11 @@ export default function SupervisorDashboard() {
 
             <KPIGrid
                 stats={stats}
-                caisses={caisses}
+                caisses={filteredCaisses}
             />
 
             <DashboardFilters
+
                 entreprise={entreprise}
                 setEntreprise={setEntreprise}
 
@@ -100,6 +137,7 @@ export default function SupervisorDashboard() {
 
                 demandes={demandes}
                 caisses={caisses}
+
             />
 
             <div className="grid grid-cols-3 gap-6">

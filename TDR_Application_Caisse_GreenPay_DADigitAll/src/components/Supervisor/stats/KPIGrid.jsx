@@ -30,8 +30,8 @@ export default function KPIGrid({ stats, caisses }) {
             />
 
             <KpiCard
-                title="En attente"
-                value={stats.en_attente}
+                title="En attente de justification"
+                value={stats.en_attente_justification}
                 color="secondary"
             />
 
