@@ -34,10 +34,14 @@ export default function RegisterPage() {
     ]);
 
     setPostes([
-      { id: 1, nom: "Assistante de direction" },
-      { id: 2, nom: "Commercial" },
-      { id: 3, nom: "Technicien" },
-    ]);
+    { id: 1, nom: "Assistante de direction" },
+    { id: 2, nom: "Commercial" },
+    { id: 3, nom: "Technicien" },
+    { id: 4, nom: "Comptable" },
+    { id: 5, nom: "Développeur frontend" },
+    { id: 6, nom: "Développeur fullstack" },
+    { id: 7, nom: "Directeur Général" },
+  ]);
 
   }, []);
 
