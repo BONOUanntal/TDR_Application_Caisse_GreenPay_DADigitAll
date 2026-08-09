@@ -121,9 +121,29 @@ export default function BorrowModal({
                             {caisses.map((caisse) => (
                                 <SelectItem
                                     key={String(caisse.id)}
-                                    textValue={`Caisse ${caisse.entreprise?.nom ?? caisse.nom}`}
+                                    textValue={`Caisse ${
+                                        caisse.entreprise?.nom ?? caisse.nom
+                                    } — Solde ${
+                                        Number(caisse.solde).toLocaleString(
+                                            "fr-FR"
+                                        )
+                                    } FCFA`}
                                 >
-                                    Caisse {caisse.entreprise?.nom ?? caisse.nom}
+                                    <div className="flex flex-col">
+                                        <span className="font-medium">
+                                            Caisse{" "}
+                                            {caisse.entreprise?.nom ??
+                                                caisse.nom}
+                                        </span>
+
+                                        <span className="text-xs text-gray-500">
+                                            Solde :{" "}
+                                            {Number(
+                                                caisse.solde
+                                            ).toLocaleString("fr-FR")}{" "}
+                                            FCFA
+                                        </span>
+                                    </div>
                                 </SelectItem>
                             ))}
                         </Select>
@@ -134,7 +154,9 @@ export default function BorrowModal({
                             placeholder="Sélectionner la caisse à approvisionner"
                             selectedKeys={
                                 caisseEmprunteuseId
-                                    ? new Set([String(caisseEmprunteuseId)])
+                                    ? new Set([
+                                          String(caisseEmprunteuseId),
+                                      ])
                                     : new Set()
                             }
                             onSelectionChange={(keys) => {
@@ -145,25 +167,26 @@ export default function BorrowModal({
                             {caisses.map((caisse) => (
                                 <SelectItem
                                     key={String(caisse.id)}
-                                    textValue={`${caisse.nom} - ${
-                                        caisse.entreprise?.nom ?? ""
-                                    }`}
+                                    textValue={`Caisse ${
+                                        caisse.entreprise?.nom ?? caisse.nom
+                                    } — Solde ${
+                                        Number(caisse.solde).toLocaleString(
+                                            "fr-FR"
+                                        )
+                                    } FCFA`}
                                 >
                                     <div className="flex flex-col">
                                         <span className="font-medium">
-                                            {caisse.nom}
+                                            Caisse{" "}
+                                            {caisse.entreprise?.nom ??
+                                                caisse.nom}
                                         </span>
 
                                         <span className="text-xs text-gray-500">
-                                            {caisse.entreprise?.nom ??
-                                                "Entreprise inconnue"}
-                                        </span>
-
-                                        <span className="text-xs text-gray-400">
                                             Solde actuel :{" "}
-                                            {Number(caisse.solde).toLocaleString(
-                                                "fr-FR"
-                                            )}{" "}
+                                            {Number(
+                                                caisse.solde
+                                            ).toLocaleString("fr-FR")}{" "}
                                             FCFA
                                         </span>
                                     </div>
