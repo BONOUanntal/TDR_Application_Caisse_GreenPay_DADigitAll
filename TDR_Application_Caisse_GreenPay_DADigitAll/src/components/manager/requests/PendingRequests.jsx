@@ -1,17 +1,20 @@
 export default function PendingRequests({
     demandes,
     onAccept,
+    onValidateWithoutProof,
     onReject,
 }) {
+
     return (
-        <div className="bg-white rounded-xl shadow p-6">
+
+        <div>
 
             <h2 className="text-xl font-semibold">
                 Demandes à traiter
             </h2>
 
             <p className="text-gray-500 mb-5">
-                Acceptez ou refusez les nouvelles demandes de dépenses.
+                Acceptez ou validez les demandes de dépenses.
             </p>
 
             {demandes.length === 0 ? (
@@ -50,32 +53,69 @@ export default function PendingRequests({
                                 </p>
 
                                 <p className="text-sm text-gray-500 mt-1">
-                                    {new Date(demande.created_at).toLocaleDateString("fr-FR")}
+                                    {new Date(
+                                        demande.created_at
+                                    ).toLocaleDateString("fr-FR")}
                                 </p>
+
+                                {demande.statut === "acceptee" && (
+
+                                    <p className="text-sm text-green-600 mt-2">
+                                        Demande acceptée — en attente de validation finale.
+                                    </p>
+
+                                )}
 
                             </div>
 
                             <div className="text-right">
 
                                 <p className="font-bold text-lg mb-4">
-                                    {Number(demande.montant_estime).toLocaleString("fr-FR")} FCFA
+                                    {Number(
+                                        demande.montant_estime
+                                    ).toLocaleString("fr-FR")} FCFA
                                 </p>
 
                                 <div className="flex gap-3 justify-end">
 
-                                    <button
-                                        onClick={() => onAccept(demande.id)}
-                                        className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg"
-                                    >
-                                        Accepter
-                                    </button>
+                                    {demande.statut === "en_attente" && (
 
-                                    <button
-                                        onClick={() => onReject(demande.id)}
-                                        className="border border-red-500 text-red-500 hover:bg-red-50 px-5 py-2 rounded-lg"
-                                    >
-                                        Refuser
-                                    </button>
+                                        <>
+                                            <button
+                                                onClick={() =>
+                                                    onAccept(demande.id)
+                                                }
+                                                className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg"
+                                            >
+                                                Accepter
+                                            </button>
+
+                                            <button
+                                                onClick={() =>
+                                                    onReject(demande.id)
+                                                }
+                                                className="border border-red-500 text-red-500 hover:bg-red-50 px-5 py-2 rounded-lg"
+                                            >
+                                                Refuser
+                                            </button>
+                                        </>
+
+                                    )}
+
+                                    {demande.statut === "acceptee" && (
+
+                                        <button
+                                            onClick={() =>
+                                                onValidateWithoutProof(
+                                                    demande.id
+                                                )
+                                            }
+                                            className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg"
+                                        >
+                                            Valider
+                                        </button>
+
+                                    )}
 
                                 </div>
 

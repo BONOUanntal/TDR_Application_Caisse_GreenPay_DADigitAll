@@ -1,14 +1,17 @@
 import { Button } from "@heroui/react";
 
-export default function QuickActions() {
+export default function QuickActions({ onBorrow }) {
     return (
-        <div className="bg-white rounded-xl shadow p-6">
+        <div>
             <h2 className="text-xl font-semibold mb-4">
                 Actions rapides
             </h2>
 
             <div className="flex gap-4">
-                <Button color="primary">
+                <Button
+                    color="primary"
+                    onPress={onBorrow}
+                >
                     Approvisionner une caisse
                 </Button>
 

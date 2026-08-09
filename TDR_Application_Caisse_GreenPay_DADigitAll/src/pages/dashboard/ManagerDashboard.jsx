@@ -4,24 +4,29 @@ import DashboardHeader from "../../components/manager/dashboard/DashboardHeader"
 import StatsCards from "../../components/manager/StatsCards";
 import AlertSoldeInsuffisant from "../../components/manager/AlertSoldeInsuffisant";
 import PendingRequests from "../../components/manager/requests/PendingRequests";
+import RequestHistory from "../../components/manager/requests/RequestHistory";
 import QuickActions from "../../components/manager/actions/QuickActions";
 import PendingProofs from "../../components/manager/proofs/PendingProofs";
+import BorrowModal from "../../components/manager/loans/BorrowModal";
 import api from "../../services/api";
 
 export default function ManagerDashboard() {
   const [caisses, setCaisses] = useState([]);
   const [demandes, setDemandes] = useState([]);
   const [preuves, setPreuves] = useState([]);
+  const [historique, setHistorique] = useState([]);
+  const [isBorrowModalOpen, setIsBorrowModalOpen] = useState(false);
 
   async function fetchDashboard() {
         console.log("fetchDashboard appelé");
 
         try {
 
-            const [caissesRes, demandesRes, preuvesRes] = await Promise.all([
+            const [caissesRes, demandesRes, preuvesRes, historiqueRes] = await Promise.all([
                 api.get("/caisses"),
                 api.get("/demandes/en-attente"),
                 api.get("/preuves/en-attente"),
+                api.get("/demandes/historique"),
             ]);
 
             // const caissesRes = await api.get("/caisses");
@@ -31,6 +36,7 @@ export default function ManagerDashboard() {
             setCaisses(caissesRes.data);
             setDemandes(demandesRes.data);
             setPreuves(preuvesRes.data);
+            setHistorique(historiqueRes.data);
 
             console.log("Réponse complète :", caissesRes);
             console.log("Data :", caissesRes.data);
@@ -41,16 +47,37 @@ export default function ManagerDashboard() {
         }
     }
 
-    async function handleAccept(id) {
+    async function handleValidateWithoutProof(id) {
         try {
 
-            await api.post(`/demandes/${id}/accepter`);
+            await api.post(`/demandes/${id}/valider-sans-preuve`);
 
             fetchDashboard();
 
         } catch (error) {
-            console.log(error);
-            console.log(error.response?.data);
+
+            console.error(error);
+            console.error(error.response?.data);
+
+        }
+    }
+
+    async function handleAccept(id) {
+        try {
+            await api.post(`/demandes/${id}/accepter`);
+
+            await fetchDashboard();
+
+        } catch (error) {
+            if (error.response?.status === 422) {
+                alert(
+                    error.response.data?.message ||
+                    "Solde insuffisant pour cette opération."
+                );
+            } else {
+                console.error("Erreur :", error);
+                alert("Une erreur est survenue.");
+            }
         }
     }
 
@@ -86,6 +113,22 @@ export default function ManagerDashboard() {
         }
     }
 
+    async function handleBorrow(data) {
+        try {
+            await api.post("/emprunts", data);
+
+            await fetchDashboard();
+
+            alert("Emprunt enregistré avec succès.");
+
+        } catch (error) {
+            console.error("Erreur emprunt :", error);
+            console.error(error.response?.data);
+
+            throw error;
+        }
+    }
+
   useEffect(()=>{
     fetchDashboard();
   },[]);
@@ -103,6 +146,7 @@ export default function ManagerDashboard() {
             <PendingRequests
                 demandes={demandes}
                 onAccept={handleAccept}
+                onValidateWithoutProof={handleValidateWithoutProof}
                 onReject={handleReject}
             />
 
@@ -112,7 +156,18 @@ export default function ManagerDashboard() {
                 onReject={handleRejectProof}
             />
 
-            <QuickActions />
+            <RequestHistory demandes={historique} />
+
+            <QuickActions
+                onBorrow={() => setIsBorrowModalOpen(true)}
+            />
+
+            <BorrowModal
+                isOpen={isBorrowModalOpen}
+                onClose={() => setIsBorrowModalOpen(false)}
+                caisses={caisses}
+                onSuccess={handleBorrow}
+            />
 
         </div>
 
