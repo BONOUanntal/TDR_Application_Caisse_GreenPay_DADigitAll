@@ -3,9 +3,7 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 
 export default function DashboardLayout() {
-
     return (
-
         <div className="flex h-screen">
 
             <Sidebar />
@@ -15,15 +13,11 @@ export default function DashboardLayout() {
                 <Header />
 
                 <main className="flex-1 bg-gray-100 p-6 overflow-auto">
-
                     <Outlet />
-
                 </main>
 
             </div>
 
         </div>
-
     );
-
 }

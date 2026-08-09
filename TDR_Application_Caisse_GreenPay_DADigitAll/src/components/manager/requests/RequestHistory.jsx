@@ -1,79 +1,113 @@
 export default function RequestHistory({ demandes }) {
+    const status = {
+        en_attente: {
+            label: "En attente",
+            color: "bg-yellow-100 text-yellow-700",
+        },
+
+        acceptee: {
+            label: "Acceptée",
+            color: "bg-green-100 text-green-700",
+        },
+
+        preuve_envoyee: {
+            label: "Preuve envoyée",
+            color: "bg-blue-100 text-blue-700",
+        },
+
+        preuve_rejetee: {
+            label: "Preuve rejetée",
+            color: "bg-red-100 text-red-700",
+        },
+
+        terminee: {
+            label: "Terminée",
+            color: "bg-green-100 text-green-700",
+        },
+
+        rejetee: {
+            label: "Rejetée",
+            color: "bg-red-100 text-red-700",
+        },
+    };
+
     return (
         <div className="space-y-4">
 
-            <div>
-                <h2 className="text-xl font-semibold">
-                    Historique des demandes
-                </h2>
+            {demandes.map((demande) => {
 
-                <p className="text-gray-500">
-                    Historique de toutes les demandes des employés.
-                </p>
-            </div>
+                const current = status[demande.statut] ?? {
+                    label: demande.statut ?? "Inconnu",
+                    color: "bg-gray-100 text-gray-700",
+                };
 
-            {demandes.length === 0 ? (
-                <p className="text-gray-500">
-                    Aucune demande enregistrée.
-                </p>
-            ) : (
-                <div className="space-y-3">
+                return (
+                    <div
+                        key={demande.id}
+                        className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 hover:shadow-md transition"
+                    >
 
-                    {demandes.map((demande) => (
+                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
 
-                        <div
-                            key={demande.id}
-                            className="border rounded-xl p-5"
-                        >
+                            {/* ================================
+                                INFORMATIONS DEMANDEUR
+                            ================================= */}
 
-                            <div className="flex justify-between">
+                            <div>
 
-                                <div>
-                                    <h3 className="font-semibold">
-                                        {demande.user?.name}
-                                    </h3>
+                                <h3 className="font-semibold text-lg text-gray-900">
+                                    {demande.user?.name ??
+                                        demande.user?.nom ??
+                                        "Utilisateur inconnu"}
+                                </h3>
 
-                                    <p className="text-sm text-gray-500">
-                                        {demande.entreprise?.nom}
-                                    </p>
+                                <p className="text-sm text-gray-500 mt-1">
+                                    {demande.user?.entreprise?.nom ??
+                                        demande.entreprise?.nom ??
+                                        ""}
+                                </p>
 
-                                    <p className="mt-2">
-                                        {demande.motif}
-                                    </p>
-                                </div>
-
-                                <div className="text-right">
-
-                                    <p className="font-bold">
-                                        {Number(
-                                            demande.montant_estime
-                                        ).toLocaleString("fr-FR")} FCFA
-                                    </p>
-
-                                    <p className="text-sm text-gray-500">
-                                        {new Date(
-                                            demande.created_at
-                                        ).toLocaleDateString("fr-FR")}
-                                    </p>
-
-                                </div>
+                                <p className="text-gray-700 mt-4">
+                                    {demande.motif}
+                                </p>
 
                             </div>
 
-                            <div className="mt-4">
 
-                                <span className="px-3 py-1 rounded-full text-sm bg-gray-100">
-                                    {demande.statut}
+                            {/* ================================
+                                MONTANT + DATE
+                            ================================= */}
+
+                            <div className="text-left md:text-right">
+
+                                <p className="font-bold text-lg text-gray-900">
+                                    {Number(
+                                        demande.montant_estime ?? 0
+                                    ).toLocaleString("fr-FR")}{" "}
+                                    FCFA
+                                </p>
+
+                                <p className="text-sm text-gray-500 mt-1">
+                                    {demande.created_at
+                                        ? new Date(
+                                            demande.created_at
+                                        ).toLocaleDateString("fr-FR")
+                                        : "-"}
+                                </p>
+
+                                <span
+                                    className={`inline-block mt-3 px-3 py-1 rounded-full text-sm ${current.color}`}
+                                >
+                                    {current.label}
                                 </span>
 
                             </div>
 
                         </div>
 
-                    ))}
-
-                </div>
-            )}
+                    </div>
+                );
+            })}
 
         </div>
     );

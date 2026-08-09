@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import DashboardLayout from "../layouts/DashboardLayout";
 import ProtectedRoute from "./ProtectedRoute";
@@ -9,34 +9,42 @@ import RegisterPage from "../pages/RegisterPage";
 import DashboardPage from "../pages/dashboard/DashboardPage";
 
 export default function AppRoutes() {
-
     return (
+        <Routes>
 
-            <Routes>
+            <Route
+                path="/"
+                element={<LoginPage />}
+            />
 
-                <Route path="/" element={<LoginPage />} />
+            <Route
+                path="/register"
+                element={<RegisterPage />}
+            />
 
-                <Route path="/register" element={<RegisterPage />} />
+            <Route
+                path="/dashboard"
+                element={
+                    <ProtectedRoute>
+                        <DashboardLayout />
+                    </ProtectedRoute>
+                }
+            >
 
+                {/* Dashboard principal */}
                 <Route
-                    path="/dashboard"
-                    element={
-                        <ProtectedRoute>
+                    index
+                    element={<DashboardPage />}
+                />
 
-                            <DashboardLayout />
+                {/* Historique manager */}
+                <Route
+                    path="historique"
+                    element={<DashboardPage />}
+                />
 
-                        </ProtectedRoute>
-                    }
-                >
+            </Route>
 
-                    <Route
-                        index
-                        element={<DashboardPage />}
-                    />
-
-                </Route>
-
-            </Routes>
+        </Routes>
     );
-
 }
