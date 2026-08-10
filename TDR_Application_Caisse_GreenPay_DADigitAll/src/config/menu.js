@@ -32,7 +32,11 @@ const menus = {
     superviseur: [
         {
             label: "Dashboard",
-            path: "/dashboard",
+            path: "/dashboard/superviseur",
+        },
+        {
+            label: "Historique",
+            path: "/dashboard/superviseur/historique",
         },
         {
             label: "Demandes",

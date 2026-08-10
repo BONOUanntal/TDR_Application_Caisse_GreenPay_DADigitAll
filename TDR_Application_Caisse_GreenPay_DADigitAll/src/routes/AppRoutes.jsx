@@ -7,6 +7,7 @@ import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 
 import DashboardPage from "../pages/dashboard/DashboardPage";
+import SupervisorDashboard from "../pages/dashboard/SupervisorDashboard";
 
 export default function AppRoutes() {
     return (
@@ -31,7 +32,7 @@ export default function AppRoutes() {
                 }
             >
 
-                {/* Dashboard principal */}
+                {/* Dashboard selon le rôle */}
                 <Route
                     index
                     element={<DashboardPage />}
@@ -41,6 +42,18 @@ export default function AppRoutes() {
                 <Route
                     path="historique"
                     element={<DashboardPage />}
+                />
+
+                {/* Dashboard superviseur */}
+                <Route
+                    path="superviseur"
+                    element={<SupervisorDashboard />}
+                />
+
+                {/* Historique superviseur */}
+                <Route
+                    path="superviseur/historique"
+                    element={<SupervisorDashboard />}
                 />
 
             </Route>

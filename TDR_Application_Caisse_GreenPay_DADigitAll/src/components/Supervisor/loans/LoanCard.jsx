@@ -2,8 +2,24 @@ import { Chip } from "@heroui/react";
 
 export default function LoanCard({ emprunt }) {
 
-    return (
+    const caissePreteuse =
+        emprunt?.caisse_preteuse ??
+        emprunt?.caissePreteuse;
 
+    const caisseEmprunteuse =
+        emprunt?.caisse_emprunteuse ??
+        emprunt?.caisseEmprunteuse;
+
+    const nomCaissePreteuse =
+        caissePreteuse?.nom ?? "Caisse inconnue";
+
+    const nomCaisseEmprunteuse =
+        caisseEmprunteuse?.nom ?? "Caisse inconnue";
+
+    const estRembourse =
+        emprunt?.statut === "rembourse";
+
+    return (
         <div className="px-6 py-5">
 
             <div className="flex justify-between items-center">
@@ -11,32 +27,26 @@ export default function LoanCard({ emprunt }) {
                 <div>
 
                     <p className="font-semibold">
-
-                        {emprunt.caisse_source.nom}
-
+                        {nomCaissePreteuse}
                     </p>
 
                     <p className="text-sm text-gray-500">
-
                         →
-
                         {" "}
-
-                        {emprunt.caisse_destination.nom}
-
+                        {nomCaisseEmprunteuse}
                     </p>
 
                 </div>
 
                 <Chip
                     color={
-                        emprunt.regularise
+                        estRembourse
                             ? "success"
                             : "warning"
                     }
                     variant="flat"
                 >
-                    {emprunt.regularise
+                    {estRembourse
                         ? "Régularisé"
                         : "En cours"}
                 </Chip>
@@ -48,23 +58,30 @@ export default function LoanCard({ emprunt }) {
                 <p className="font-bold">
 
                     {Number(
-                        emprunt.montant
-                    ).toLocaleString("fr-FR")} FCFA
+                        emprunt?.montant ?? 0
+                    ).toLocaleString("fr-FR")}
+
+                    {" "}FCFA
 
                 </p>
 
                 <p className="text-sm text-gray-500">
 
-                    {new Date(
-                        emprunt.created_at
-                    ).toLocaleDateString("fr-FR")}
+                    {emprunt?.date_emprunt
+                        ? new Date(
+                            emprunt.date_emprunt
+                        ).toLocaleDateString("fr-FR")
+                        : emprunt?.created_at
+                            ? new Date(
+                                emprunt.created_at
+                            ).toLocaleDateString("fr-FR")
+                            : "-"
+                    }
 
                 </p>
 
             </div>
 
         </div>
-
     );
-
 }

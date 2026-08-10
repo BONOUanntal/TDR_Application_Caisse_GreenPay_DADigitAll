@@ -3,19 +3,102 @@ import { Button } from "@heroui/react";
 
 export default function ExportButtons() {
 
-    function exportPdf() {
-        window.open(
-            `${api.defaults.baseURL}/rapports/export/pdf`,
-            "_blank"
-        );
-    }
+    const exporterExcel = async () => {
+        try {
+            const response = await api.get(
+                "/rapports/export/excel",
+                {
+                    responseType: "blob",
+                }
+            );
 
-    function exportExcel() {
-        window.open(
-            `${api.defaults.baseURL}/rapports/export/excel`,
-            "_blank"
-        );
-    }
+            const url = window.URL.createObjectURL(
+                new Blob(
+                    [response.data],
+                    {
+                        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    }
+                )
+            );
+
+            const link = document.createElement("a");
+
+            link.href = url;
+
+            link.setAttribute(
+                "download",
+                `rapport-ekash-${new Date()
+                    .toISOString()
+                    .slice(0, 10)}.xlsx`
+            );
+
+            document.body.appendChild(link);
+
+            link.click();
+
+            link.remove();
+
+            window.URL.revokeObjectURL(url);
+
+        } catch (error) {
+
+            console.error(
+                "Erreur export Excel :",
+                error
+            );
+
+        }
+    };
+
+
+    const exporterPdf = async () => {
+        try {
+
+            const response = await api.get(
+                "/rapports/export/pdf",
+                {
+                    responseType: "blob",
+                }
+            );
+
+            const url = window.URL.createObjectURL(
+                new Blob(
+                    [response.data],
+                    {
+                        type: "application/pdf",
+                    }
+                )
+            );
+
+            const link = document.createElement("a");
+
+            link.href = url;
+
+            link.setAttribute(
+                "download",
+                `rapport-ekash-${new Date()
+                    .toISOString()
+                    .slice(0, 10)}.pdf`
+            );
+
+            document.body.appendChild(link);
+
+            link.click();
+
+            link.remove();
+
+            window.URL.revokeObjectURL(url);
+
+        } catch (error) {
+
+            console.error(
+                "Erreur export PDF :",
+                error
+            );
+
+        }
+    };
+
 
     return (
 
@@ -23,14 +106,14 @@ export default function ExportButtons() {
 
             <Button
                 color="success"
-                onPress={exportExcel}
+                onPress={exporterExcel}
             >
                 Excel
             </Button>
 
             <Button
                 color="primary"
-                onPress={exportPdf}
+                onPress={exporterPdf}
             >
                 PDF
             </Button>
