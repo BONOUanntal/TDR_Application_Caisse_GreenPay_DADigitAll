@@ -22,6 +22,14 @@ export default function ManagerDashboard() {
     const [demandes, setDemandes] = useState([]);
     const [preuves, setPreuves] = useState([]);
     const [historique, setHistorique] = useState([]);
+    const [historiquePage, setHistoriquePage] = useState(1);
+
+    const [historiquePagination, setHistoriquePagination] = useState({
+        current_page: 1,
+        last_page: 1,
+        per_page: 10,
+        total: 0,
+    });
 
     const [isBorrowModalOpen, setIsBorrowModalOpen] = useState(false);
 
@@ -46,9 +54,9 @@ export default function ManagerDashboard() {
     // =====================================================
 
     async function fetchDashboard() {
+        console.log("fetchDashboard appelé");
 
         try {
-
             const [
                 caissesRes,
                 demandesRes,
@@ -59,19 +67,33 @@ export default function ManagerDashboard() {
                 api.get("/preuves/en-attente"),
             ]);
 
-            setCaisses(caissesRes.data);
-            setDemandes(demandesRes.data);
-            setPreuves(preuvesRes.data);
-
-        } catch (error) {
-
-            console.error(
-                "Erreur récupération dashboard :",
-                error
+            console.log("Réponse demandes :", demandesRes.data);
+            console.log(
+                "Demandes est un tableau ?",
+                Array.isArray(demandesRes.data)
             );
 
-        }
+            setCaisses(
+                Array.isArray(caissesRes.data)
+                    ? caissesRes.data
+                    : caissesRes.data.data ?? []
+            );
 
+            setDemandes(
+                Array.isArray(demandesRes.data)
+                    ? demandesRes.data
+                    : demandesRes.data.data ?? []
+            );
+
+            setPreuves(
+                Array.isArray(preuvesRes.data)
+                    ? preuvesRes.data
+                    : preuvesRes.data.data ?? []
+            );
+
+        } catch (error) {
+            console.error("Erreur API :", error);
+        }
     }
 
 
@@ -79,14 +101,42 @@ export default function ManagerDashboard() {
     // HISTORIQUE
     // =====================================================
 
-    async function fetchHistorique() {
+    async function fetchHistorique(page = 1) {
 
         try {
 
-            const response =
-                await api.get("/demandes/historique");
+            const response = await api.get(
+                `/demandes/historique?page=${page}`
+            );
 
-            setHistorique(response.data);
+            console.log(
+                "Historique pagination :",
+                response.data
+            );
+
+            setHistorique(
+                Array.isArray(response.data)
+                    ? response.data
+                    : response.data.data ?? []
+            );
+
+            setHistoriquePagination({
+                current_page:
+                    response.data.current_page ?? 1,
+
+                last_page:
+                    response.data.last_page ?? 1,
+
+                per_page:
+                    response.data.per_page ?? 10,
+
+                total:
+                    response.data.total ?? 0,
+            });
+
+            setHistoriquePage(
+                response.data.current_page ?? 1
+            );
 
         } catch (error) {
 
@@ -96,7 +146,6 @@ export default function ManagerDashboard() {
             );
 
         }
-
     }
 
 
@@ -292,6 +341,62 @@ export default function ManagerDashboard() {
                     <HistorySection
                         demandes={historique}
                     />
+
+                    {historiquePagination.last_page > 1 && (
+                        <div className="flex items-center justify-center gap-2 pt-4">
+
+                            <button
+                                onClick={() =>
+                                    fetchHistorique(historiquePage - 1)
+                                }
+                                disabled={historiquePage === 1}
+                                className="px-4 py-2 border rounded-lg
+                                        disabled:opacity-40
+                                        disabled:cursor-not-allowed
+                                        hover:bg-gray-50"
+                            >
+                                Précédent
+                            </button>
+
+                            {Array.from(
+                                {
+                                    length: historiquePagination.last_page,
+                                },
+                                (_, index) => index + 1
+                            ).map((page) => (
+                                <button
+                                    key={page}
+                                    onClick={() =>
+                                        fetchHistorique(page)
+                                    }
+                                    className={`px-4 py-2 rounded-lg ${
+                                        historiquePage === page
+                                            ? "bg-blue-600 text-white"
+                                            : "border hover:bg-gray-100"
+                                    }`}
+                                >
+                                    {page}
+                                </button>
+                            ))}
+
+                            <button
+                                onClick={() =>
+                                    fetchHistorique(historiquePage + 1)
+                                }
+                                disabled={
+                                    historiquePage ===
+                                    historiquePagination.last_page
+                                }
+                                className="px-4 py-2 border rounded-lg
+                                        disabled:opacity-40
+                                        disabled:cursor-not-allowed
+                                        hover:bg-gray-50"
+                            >
+                                Suivant
+                            </button>
+
+                        </div>
+                    )}
 
                 </section>
 
