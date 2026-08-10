@@ -56,13 +56,12 @@ export default function DefinePasswordPage() {
         try {
 
             const response = await api.post(
-                "/reinitialiser-mot-de-passe",
+                "/mot-de-passe/reinitialiser",
                 {
                     token,
                     email,
                     password,
-                    password_confirmation:
-                        passwordConfirmation,
+                    password_confirmation: passwordConfirmation,
                 }
             );
 

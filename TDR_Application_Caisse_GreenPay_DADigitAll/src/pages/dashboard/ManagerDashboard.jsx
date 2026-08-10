@@ -9,6 +9,8 @@ import HistorySection from "../../components/manager/history/HistorySection";
 import QuickActions from "../../components/manager/actions/QuickActions";
 import PendingProofs from "../../components/manager/proofs/PendingProofs";
 import BorrowModal from "../../components/manager/loans/BorrowModal";
+import AddRequesterModal from "../../components/users/AddRequesterModal";
+import AddCaisseModal from "../../components/manager/caisses/AddCaisseModal";
 import api from "../../services/api";
 
 export default function ManagerDashboard() {
@@ -32,6 +34,8 @@ export default function ManagerDashboard() {
     });
 
     const [isBorrowModalOpen, setIsBorrowModalOpen] = useState(false);
+    const [isRequesterModalOpen, setIsRequesterModalOpen] = useState(false);
+    const [isCaisseModalOpen, setIsCaisseModalOpen] = useState(false);
 
 
     // =====================================================
@@ -409,6 +413,27 @@ export default function ManagerDashboard() {
 
                 <>
 
+                    <div className="flex justify-end gap-3">
+
+                        <button
+                            type="button"
+                            onClick={() => setIsCaisseModalOpen(true)}
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+                        >
+                            + Ajouter une caisse
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => setIsRequesterModalOpen(true)}
+                            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+                        >
+                            + Ajouter un demandeur
+                        </button>
+
+                    </div>
+
+
                     <StatsCards
                         caisses={caisses}
                     />
@@ -448,6 +473,24 @@ export default function ManagerDashboard() {
                         }
                         caisses={caisses}
                         onSuccess={handleBorrow}
+                    />
+
+                    <AddRequesterModal
+                        isOpen={isRequesterModalOpen}
+                        onClose={() =>
+                            setIsRequesterModalOpen(false)
+                        }
+                    />
+
+                    <AddCaisseModal
+                        isOpen={isCaisseModalOpen}
+                        onClose={() =>
+                            setIsCaisseModalOpen(false)
+                        }
+                        onSuccess={async () => {
+                            await fetchDashboard();
+                            setIsCaisseModalOpen(false);
+                        }}
                     />
 
                 </>

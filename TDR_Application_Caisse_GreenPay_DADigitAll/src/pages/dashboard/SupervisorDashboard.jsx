@@ -9,6 +9,7 @@ import DashboardFilters from "../../components/Supervisor/filters/DashboardFilte
 import RequestsTable from "../../components/Supervisor/requests/RequestsTable";
 import IntercashLoans from "../../components/Supervisor/loans/IntercashLoans";
 import SupervisorHistory from "../../components/Supervisor/history/SupervisorHistory";
+import AddRequesterModal from "../../components/users/AddRequesterModal";
 
 
 export default function SupervisorDashboard() {
@@ -17,6 +18,9 @@ export default function SupervisorDashboard() {
 
     const isHistorique =
         location.pathname === "/dashboard/superviseur/historique";
+
+    const [isRequesterModalOpen, setIsRequesterModalOpen] =
+    useState(false);
 
     const [caisses, setCaisses] = useState([]);
     const [stats, setStats] = useState({});
@@ -246,6 +250,13 @@ export default function SupervisorDashboard() {
                         />
 
                     </div>
+
+                    <AddRequesterModal
+                        isOpen={isRequesterModalOpen}
+                        onClose={() =>
+                            setIsRequesterModalOpen(false)
+                        }
+                    />
 
                 </>
 
