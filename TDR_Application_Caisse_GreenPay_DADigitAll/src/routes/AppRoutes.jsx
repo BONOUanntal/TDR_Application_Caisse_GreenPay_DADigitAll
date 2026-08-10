@@ -4,10 +4,12 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import ProtectedRoute from "./ProtectedRoute";
 
 import LoginPage from "../pages/LoginPage";
-import RegisterPage from "../pages/RegisterPage";
 
 import DashboardPage from "../pages/dashboard/DashboardPage";
 import SupervisorDashboard from "../pages/dashboard/SupervisorDashboard";
+
+import ForgotPasswordPage from "../pages/ForgotPasswordPage";
+import DefinePasswordPage from "../pages/DefinePasswordPage";
 
 export default function AppRoutes() {
     return (
@@ -19,8 +21,13 @@ export default function AppRoutes() {
             />
 
             <Route
-                path="/register"
-                element={<RegisterPage />}
+                path="/mot-de-passe-oublie"
+                element={<ForgotPasswordPage />}
+            />
+
+            <Route
+                path="/definir-mot-de-passe"
+                element={<DefinePasswordPage />}
             />
 
             <Route

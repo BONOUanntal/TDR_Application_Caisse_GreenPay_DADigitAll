@@ -143,17 +143,12 @@ export default function LoginPage() {
                 </form>
 
                 <p className="text-center mt-6">
-
-                    Pas encore de compte ?
-
                     <Link
-                        to="/register"
-                        className="text-green-600 ml-2"
+                        to="/mot-de-passe-oublie"
+                        className="text-green-600 hover:text-green-700"
                     >
-                        S'inscrire
-
+                        Mot de passe oublié ?
                     </Link>
-
                 </p>
 
             </div>
