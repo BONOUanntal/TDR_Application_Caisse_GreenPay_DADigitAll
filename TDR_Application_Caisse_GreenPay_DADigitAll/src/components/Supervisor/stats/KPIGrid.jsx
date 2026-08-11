@@ -29,12 +29,6 @@ export default function KPIGrid({ stats, caisses }) {
                 color="warning"
             />
 
-            <KpiCard
-                title="En attente de justification"
-                value={stats.en_attente_justification}
-                color="secondary"
-            />
-
         </div>
 
     );
