@@ -10,8 +10,8 @@ import QuickActions from "../../components/manager/actions/QuickActions";
 import PendingProofs from "../../components/manager/proofs/PendingProofs";
 import BorrowModal from "../../components/manager/loans/BorrowModal";
 import AddRequesterModal from "../../components/users/AddRequesterModal";
-// import AddCaisseModal from "../../components/manager/caisses/AddCaisseModal";
 import ChooseCaisseModal from "../../components/manager/requests/ChooseCaisseModal";
+import SupplyCaisseModal from "../../components/manager/caisses/SupplyCaisseModal";
 import api from "../../services/api";
 
 export default function ManagerDashboard() {
@@ -36,8 +36,8 @@ export default function ManagerDashboard() {
 
     const [isBorrowModalOpen, setIsBorrowModalOpen] = useState(false);
     const [isRequesterModalOpen, setIsRequesterModalOpen] = useState(false);
-    // const [isCaisseModalOpen, setIsCaisseModalOpen] = useState(false);
     const [isCaisseChoiceModalOpen, setIsCaisseChoiceModalOpen] = useState(false);
+    const [isSupplyModalOpen, setIsSupplyModalOpen] = useState(false);
     const [selectedDemande, setSelectedDemande] = useState(null);
 
 
@@ -337,6 +337,32 @@ export default function ManagerDashboard() {
 
     }
 
+    async function handleSupply(caisseId, montant) {
+
+        try {
+
+            await api.post(
+                `/caisses/${caisseId}/approvisionner`,
+                { montant }
+            );
+
+            await fetchDashboard();
+
+            setIsSupplyModalOpen(false);
+
+            alert("Caisse approvisionnée avec succès.");
+
+        } catch (error) {
+
+            console.error("Erreur approvisionnement :", error);
+            console.error(error.response?.data);
+
+            throw error;
+
+        }
+
+    }
+
 
     // =====================================================
     // AFFICHAGE
@@ -506,8 +532,19 @@ export default function ManagerDashboard() {
                         onBorrow={() =>
                             setIsBorrowModalOpen(true)
                         }
+                        onSupply={() =>
+                            setIsSupplyModalOpen(true)
+                        }
                     />
 
+                    <SupplyCaisseModal
+                        isOpen={isSupplyModalOpen}
+                        onClose={() =>
+                            setIsSupplyModalOpen(false)
+                        }
+                        caisses={caisses}
+                        onSuccess={handleSupply}
+                    />
 
                     <BorrowModal
                         isOpen={isBorrowModalOpen}

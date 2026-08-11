@@ -1,6 +1,6 @@
 import { Button } from "@heroui/react";
 
-export default function QuickActions({ onBorrow }) {
+export default function QuickActions({ onBorrow, onSupply }) {
     return (
         <div>
             <h2 className="text-xl font-semibold mb-4">
@@ -12,11 +12,11 @@ export default function QuickActions({ onBorrow }) {
                     color="primary"
                     onPress={onBorrow}
                 >
-                    Approvisionner une caisse
+                    Emprunt
                 </Button>
 
-                <Button color="secondary">
-                    Voir toutes les caisses
+                <Button color="secondary" onPress={onSupply}>
+                    Approvisionner une caisse
                 </Button>
             </div>
         </div>
