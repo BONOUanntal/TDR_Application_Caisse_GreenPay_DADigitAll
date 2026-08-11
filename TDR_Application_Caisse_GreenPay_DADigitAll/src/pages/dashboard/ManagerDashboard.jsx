@@ -11,6 +11,7 @@ import PendingProofs from "../../components/manager/proofs/PendingProofs";
 import BorrowModal from "../../components/manager/loans/BorrowModal";
 import AddRequesterModal from "../../components/users/AddRequesterModal";
 import AddCaisseModal from "../../components/manager/caisses/AddCaisseModal";
+import ChooseCaisseModal from "../../components/manager/requests/ChooseCaisseModal";
 import api from "../../services/api";
 
 export default function ManagerDashboard() {
@@ -36,6 +37,8 @@ export default function ManagerDashboard() {
     const [isBorrowModalOpen, setIsBorrowModalOpen] = useState(false);
     const [isRequesterModalOpen, setIsRequesterModalOpen] = useState(false);
     const [isCaisseModalOpen, setIsCaisseModalOpen] = useState(false);
+    const [isCaisseChoiceModalOpen, setIsCaisseChoiceModalOpen] = useState(false);
+    const [selectedDemande, setSelectedDemande] = useState(null);
 
 
     // =====================================================
@@ -176,16 +179,27 @@ export default function ManagerDashboard() {
 
     }
 
+    function handleAccept(id) {
+        const demande = demandes.find((d) => d.id === id);
+        if (!demande) return;
 
-    async function handleAccept(id) {
+        setSelectedDemande(demande);
+        setIsCaisseChoiceModalOpen(true);
+    }
+
+    async function handleConfirmAccept(id, caisseId) {
 
         try {
 
             await api.post(
-                `/demandes/${id}/accepter`
+                `/demandes/${id}/accepter`,
+                { caisse_id: caisseId }
             );
 
             await fetchDashboard();
+
+            setIsCaisseChoiceModalOpen(false);
+            setSelectedDemande(null);
 
         } catch (error) {
 
@@ -199,16 +213,49 @@ export default function ManagerDashboard() {
             } else {
 
                 console.error("Erreur :", error);
-
-                alert(
-                    "Une erreur est survenue."
-                );
+                alert("Une erreur est survenue.");
 
             }
+
+            throw error; // pour que le loading de la modal s'arrête proprement
 
         }
 
     }
+
+
+    // async function handleAccept(id) {
+
+    //     try {
+
+    //         await api.post(
+    //             `/demandes/${id}/accepter`
+    //         );
+
+    //         await fetchDashboard();
+
+    //     } catch (error) {
+
+    //         if (error.response?.status === 422) {
+
+    //             alert(
+    //                 error.response.data?.message ||
+    //                 "Solde insuffisant pour cette opération."
+    //             );
+
+    //         } else {
+
+    //             console.error("Erreur :", error);
+
+    //             alert(
+    //                 "Une erreur est survenue."
+    //             );
+
+    //         }
+
+    //     }
+
+    // }
 
 
     async function handleReject(id) {
@@ -491,6 +538,17 @@ export default function ManagerDashboard() {
                             await fetchDashboard();
                             setIsCaisseModalOpen(false);
                         }}
+                    />
+
+                    <ChooseCaisseModal
+                        isOpen={isCaisseChoiceModalOpen}
+                        onClose={() => {
+                            setIsCaisseChoiceModalOpen(false);
+                            setSelectedDemande(null);
+                        }}
+                        demande={selectedDemande}
+                        caisses={caisses}
+                        onConfirm={handleConfirmAccept}
                     />
 
                 </>

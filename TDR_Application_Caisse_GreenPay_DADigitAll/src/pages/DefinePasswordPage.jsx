@@ -10,6 +10,11 @@ export default function DefinePasswordPage() {
     const token = searchParams.get("token");
     const email = searchParams.get("email");
 
+    // activation par défaut si aucun mode n'est fourni
+    const mode = searchParams.get("mode") || "activation";
+
+    const isReset = mode === "reset";
+
     const [password, setPassword] = useState("");
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
 
@@ -67,7 +72,11 @@ export default function DefinePasswordPage() {
 
             setMessage(
                 response.data?.message ||
-                "Mot de passe défini avec succès."
+                (
+                    isReset
+                        ? "Votre mot de passe a été réinitialisé avec succès."
+                        : "Votre mot de passe a été défini avec succès."
+                )
             );
 
             setTimeout(() => {
@@ -128,13 +137,22 @@ export default function DefinePasswordPage() {
 
             <div className="bg-white p-10 rounded-xl shadow-lg w-full max-w-md">
 
+                {/* TITRE DYNAMIQUE */}
                 <h1 className="text-2xl font-bold text-center mb-2">
-                    Bienvenue
+                    {isReset
+                        ? "Réinitialiser votre mot de passe"
+                        : "Bienvenue"
+                    }
                 </h1>
 
+                {/* DESCRIPTION DYNAMIQUE */}
                 <p className="text-center text-gray-500 mb-8">
-                    Définissez votre mot de passe pour
-                    activer votre compte E-kash.
+
+                    {isReset
+                        ? "Définissez un nouveau mot de passe pour sécuriser votre compte E-kash."
+                        : "Définissez votre mot de passe pour activer votre compte E-kash."
+                    }
+
                 </p>
 
                 {message && (
@@ -209,6 +227,7 @@ export default function DefinePasswordPage() {
 
                     </div>
 
+                    {/* BOUTON DYNAMIQUE */}
                     <button
                         type="submit"
                         disabled={loading}
@@ -216,7 +235,10 @@ export default function DefinePasswordPage() {
                     >
                         {loading
                             ? "Enregistrement..."
-                            : "Définir mon mot de passe"}
+                            : isReset
+                                ? "Réinitialiser mon mot de passe"
+                                : "Définir mon mot de passe"
+                        }
                     </button>
 
                 </form>

@@ -210,9 +210,9 @@ export default function AddRequesterModal({
                 <div className="flex items-center justify-between mb-6">
 
                     <div>
-                        <h2 className="text-xl font-semibold">
+                        {/* <h2 className="text-xl font-semibold">
                             Ajouter un demandeur
-                        </h2>
+                        </h2> */}
 
                         <p className="text-sm text-gray-500 mt-1">
                             Un email sera envoyé afin que
