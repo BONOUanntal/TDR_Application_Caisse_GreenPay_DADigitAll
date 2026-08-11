@@ -192,11 +192,23 @@ export default function SupervisorDashboard() {
 
 
     return (
-
         <div className="space-y-6">
 
             <DashboardHeader />
 
+            {!isHistorique && (
+                <div className="flex justify-end gap-3">
+
+                    <button
+                        type="button"
+                        onClick={() => setIsRequesterModalOpen(true)}
+                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+                    >
+                        + Ajouter un demandeur
+                    </button>
+
+                </div>
+            )}
 
             {isHistorique ? (
 
@@ -216,34 +228,24 @@ export default function SupervisorDashboard() {
                         caisses={filteredCaisses}
                     />
 
-
                     <DashboardFilters
-
                         entreprise={entreprise}
                         setEntreprise={setEntreprise}
-
                         periode={periode}
                         setPeriode={setPeriode}
-
                         employe={employe}
                         setEmploye={setEmploye}
-
                         demandes={demandes}
                         caisses={caisses}
-
                     />
-
 
                     <div className="grid grid-cols-3 gap-6">
 
                         <div className="col-span-2">
-
                             <RequestsTable
                                 demandes={demandesVisibles}
                             />
-
                         </div>
-
 
                         <IntercashLoans
                             emprunts={emprunts}
@@ -256,6 +258,10 @@ export default function SupervisorDashboard() {
                         onClose={() =>
                             setIsRequesterModalOpen(false)
                         }
+                        onSuccess={async () => {
+                            setIsRequesterModalOpen(false);
+                            await fetchDashboard();
+                        }}
                     />
 
                 </>
@@ -263,6 +269,5 @@ export default function SupervisorDashboard() {
             )}
 
         </div>
-
     );
 }

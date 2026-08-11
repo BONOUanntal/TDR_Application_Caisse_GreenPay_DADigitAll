@@ -144,7 +144,7 @@ export default function LoginPage() {
 
                 <p className="text-center mt-6">
                     <Link
-                        to="/mot-de-passe-oublie"
+                        to="/mot-de-passe/oublie"
                         className="text-green-600 hover:text-green-700"
                     >
                         Mot de passe oublié ?

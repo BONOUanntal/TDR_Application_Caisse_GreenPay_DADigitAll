@@ -1,3 +1,5 @@
+import RequestsTable from "../requests/RequestsTable";
+
 export default function SupervisorHistory({
     demandes,
     pagination,

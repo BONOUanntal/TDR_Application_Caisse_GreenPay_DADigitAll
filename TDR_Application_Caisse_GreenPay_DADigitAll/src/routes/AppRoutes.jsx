@@ -21,7 +21,7 @@ export default function AppRoutes() {
             />
 
             <Route
-                path="/mot-de-passe-oublie"
+                path="/mot-de-passe/oublie"
                 element={<ForgotPasswordPage />}
             />
 
