@@ -16,16 +16,8 @@ const menus = {
             path: "/dashboard/historique",
         },
         {
-            label: "Demandes",
-            path: "/requests",
-        },
-        {
             label: "Caisses",
-            path: "/cashboxes",
-        },
-        {
-            label: "Emprunts",
-            path: "/loans",
+            path: "/dashboard/caisses",
         },
     ],
 

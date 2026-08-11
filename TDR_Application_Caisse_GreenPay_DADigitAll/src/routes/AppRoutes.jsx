@@ -11,6 +11,8 @@ import SupervisorDashboard from "../pages/dashboard/SupervisorDashboard";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import DefinePasswordPage from "../pages/DefinePasswordPage";
 
+import CashboxesPage from "../pages/cashboxes/CashboxesPage";
+
 export default function AppRoutes() {
     return (
         <Routes>
@@ -49,6 +51,12 @@ export default function AppRoutes() {
                 <Route
                     path="historique"
                     element={<DashboardPage />}
+                />
+
+                {/* Caisses (manager) */}
+                <Route
+                    path="caisses"
+                    element={<CashboxesPage />}
                 />
 
                 {/* Dashboard superviseur */}

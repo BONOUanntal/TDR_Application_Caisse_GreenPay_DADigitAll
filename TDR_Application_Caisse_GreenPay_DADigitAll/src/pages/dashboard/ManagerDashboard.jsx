@@ -10,7 +10,7 @@ import QuickActions from "../../components/manager/actions/QuickActions";
 import PendingProofs from "../../components/manager/proofs/PendingProofs";
 import BorrowModal from "../../components/manager/loans/BorrowModal";
 import AddRequesterModal from "../../components/users/AddRequesterModal";
-import AddCaisseModal from "../../components/manager/caisses/AddCaisseModal";
+// import AddCaisseModal from "../../components/manager/caisses/AddCaisseModal";
 import ChooseCaisseModal from "../../components/manager/requests/ChooseCaisseModal";
 import api from "../../services/api";
 
@@ -36,7 +36,7 @@ export default function ManagerDashboard() {
 
     const [isBorrowModalOpen, setIsBorrowModalOpen] = useState(false);
     const [isRequesterModalOpen, setIsRequesterModalOpen] = useState(false);
-    const [isCaisseModalOpen, setIsCaisseModalOpen] = useState(false);
+    // const [isCaisseModalOpen, setIsCaisseModalOpen] = useState(false);
     const [isCaisseChoiceModalOpen, setIsCaisseChoiceModalOpen] = useState(false);
     const [selectedDemande, setSelectedDemande] = useState(null);
 
@@ -85,6 +85,7 @@ export default function ManagerDashboard() {
                     ? caissesRes.data
                     : caissesRes.data.data ?? []
             );
+            console.log("Noms des caisses reçues :", caissesRes.data.map(c => `"${c.nom}"`));
 
             setDemandes(
                 Array.isArray(demandesRes.data)
@@ -102,6 +103,22 @@ export default function ManagerDashboard() {
             console.error("Erreur API :", error);
         }
     }
+
+    const NOMS_CAISSES_BASE = ["greenpay", "da digit all"];
+
+    function normaliser(texte) {
+        return (texte || "")
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "") // retire les accents
+            .trim();
+    }
+
+    const caissesDashboard = caisses.filter((caisse) =>
+        NOMS_CAISSES_BASE.some((nomBase) =>
+            normaliser(caisse.nom).includes(nomBase)
+        )
+    );
 
 
     // =====================================================
@@ -222,41 +239,6 @@ export default function ManagerDashboard() {
         }
 
     }
-
-
-    // async function handleAccept(id) {
-
-    //     try {
-
-    //         await api.post(
-    //             `/demandes/${id}/accepter`
-    //         );
-
-    //         await fetchDashboard();
-
-    //     } catch (error) {
-
-    //         if (error.response?.status === 422) {
-
-    //             alert(
-    //                 error.response.data?.message ||
-    //                 "Solde insuffisant pour cette opération."
-    //             );
-
-    //         } else {
-
-    //             console.error("Erreur :", error);
-
-    //             alert(
-    //                 "Une erreur est survenue."
-    //             );
-
-    //         }
-
-    //     }
-
-    // }
-
 
     async function handleReject(id) {
 
@@ -460,7 +442,20 @@ export default function ManagerDashboard() {
 
                 <>
 
-                    <div className="flex justify-end gap-3">
+
+                    <div className="flex justify-end">
+
+                        <button
+                            type="button"
+                            onClick={() => setIsRequesterModalOpen(true)}
+                            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+                        >
+                            + Ajouter un demandeur
+                        </button>
+
+                    </div>
+
+                    {/* <div className="flex justify-end gap-3">
 
                         <button
                             type="button"
@@ -478,11 +473,12 @@ export default function ManagerDashboard() {
                             + Ajouter un demandeur
                         </button>
 
-                    </div>
+                    </div> */}
 
 
                     <StatsCards
-                        caisses={caisses}
+                        caisses={caissesDashboard}
+                        totalCaisses={caisses.length}
                     />
 
 
@@ -529,7 +525,7 @@ export default function ManagerDashboard() {
                         }
                     />
 
-                    <AddCaisseModal
+                    {/* <AddCaisseModal
                         isOpen={isCaisseModalOpen}
                         onClose={() =>
                             setIsCaisseModalOpen(false)
@@ -538,7 +534,7 @@ export default function ManagerDashboard() {
                             await fetchDashboard();
                             setIsCaisseModalOpen(false);
                         }}
-                    />
+                    /> */}
 
                     <ChooseCaisseModal
                         isOpen={isCaisseChoiceModalOpen}
