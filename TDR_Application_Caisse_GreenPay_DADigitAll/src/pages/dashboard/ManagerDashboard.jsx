@@ -12,6 +12,7 @@ import BorrowModal from "../../components/manager/loans/BorrowModal";
 import AddRequesterModal from "../../components/users/AddRequesterModal";
 import ChooseCaisseModal from "../../components/manager/requests/ChooseCaisseModal";
 import SupplyCaisseModal from "../../components/manager/caisses/SupplyCaisseModal";
+import ValidateWithoutProofModal from "../../components/manager/requests/ValidateWithoutProofModal";
 import api from "../../services/api";
 
 export default function ManagerDashboard() {
@@ -177,12 +178,12 @@ export default function ManagerDashboard() {
     // DEMANDES
     // =====================================================
 
-    async function handleValidateWithoutProof(id) {
-
+    async function handleValidateWithoutProof(id, commentaire) {
         try {
 
             await api.post(
-                `/demandes/${id}/valider-sans-preuve`
+                `/demandes/${id}/valider-sans-preuve`,
+                { commentaire_validation: commentaire }
             );
 
             await fetchDashboard();
@@ -192,8 +193,12 @@ export default function ManagerDashboard() {
             console.error(error);
             console.error(error.response?.data);
 
+            alert(
+                error.response?.data?.message ||
+                "Impossible de valider cette demande sans preuve."
+            );
+            throw error; // pour que la modal affiche l'erreur et arrête le loading
         }
-
     }
 
     function handleAccept(id) {

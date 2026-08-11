@@ -1,9 +1,26 @@
+import { useState } from "react";
+import ValidateWithoutProofModal from "./ValidateWithoutProofModal";
+
 export default function PendingRequests({
     demandes,
     onAccept,
     onValidateWithoutProof,
     onReject,
 }) {
+
+    const [isValidateModalOpen, setIsValidateModalOpen] = useState(false);
+    const [selectedDemande, setSelectedDemande] = useState(null);
+
+    function openValidateModal(demande) {
+        setSelectedDemande(demande);
+        setIsValidateModalOpen(true);
+    }
+
+    async function handleConfirmValidate(id, commentaire) {
+        await onValidateWithoutProof(id, commentaire);
+        setIsValidateModalOpen(false);
+        setSelectedDemande(null);
+    }
 
     return (
 
@@ -106,9 +123,7 @@ export default function PendingRequests({
 
                                         <button
                                             onClick={() =>
-                                                onValidateWithoutProof(
-                                                    demande.id
-                                                )
+                                                openValidateModal(demande)
                                             }
                                             className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg"
                                         >
@@ -128,6 +143,16 @@ export default function PendingRequests({
                 </div>
 
             )}
+
+            <ValidateWithoutProofModal
+                isOpen={isValidateModalOpen}
+                onClose={() => {
+                    setIsValidateModalOpen(false);
+                    setSelectedDemande(null);
+                }}
+                demande={selectedDemande}
+                onConfirm={handleConfirmValidate}
+            />
 
         </div>
     );
