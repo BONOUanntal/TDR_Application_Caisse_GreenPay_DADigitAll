@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
 
@@ -9,6 +10,7 @@ export default function LoginPage() {
     const { login } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -110,19 +112,36 @@ export default function LoginPage() {
 
                         </label>
 
-                        <input
+                        <div className="relative">
 
-                            type="password"
+                            <input
 
-                            className="w-full border rounded-lg p-3"
+                                type={showPassword ? "text" : "password"}
 
-                            value={password}
+                                className="w-full border rounded-lg p-3 pr-12"
 
-                            onChange={(e) => setPassword(e.target.value)}
+                                value={password}
 
-                            required
+                                onChange={(e) => setPassword(e.target.value)}
 
-                        />
+                                required
+
+                            />
+
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword((prev) => !prev)}
+                                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                                tabIndex={-1}
+                            >
+                                {showPassword ? (
+                                    <EyeOff size={20} />
+                                ) : (
+                                    <Eye size={20} />
+                                )}
+                            </button>
+
+                        </div>
 
                     </div>
 
