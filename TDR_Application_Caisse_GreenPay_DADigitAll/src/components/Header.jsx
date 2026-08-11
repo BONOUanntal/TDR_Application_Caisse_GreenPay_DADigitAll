@@ -19,7 +19,7 @@ export default function Header() {
   }
 
   return (
-    <header className="flex justify-between items-center bg-white shadow px-6 py-4">
+    <header className="relative z-20 flex justify-between items-center bg-white shadow px-6 py-4">
 
       {/* Partie gauche */}
       <h1 className="text-xl font-semibold">
@@ -62,7 +62,7 @@ export default function Header() {
 
         {open && (
 
-        <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border">
+        <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border z-50">
 
             <div className="px-4 py-3 border-b">
 
