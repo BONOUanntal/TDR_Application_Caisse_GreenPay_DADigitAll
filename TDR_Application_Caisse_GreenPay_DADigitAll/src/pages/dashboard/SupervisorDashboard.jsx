@@ -44,34 +44,81 @@ export default function SupervisorDashboard() {
 
 
     async function fetchDashboard() {
-
         try {
-
             const [
                 caissesRes,
                 statsRes,
                 demandesRes,
                 empruntsRes,
+                mouvementsRes,
             ] = await Promise.all([
                 api.get("/caisses"),
+
                 api.get("/rapports/tableau-de-bord"),
-                api.get("/rapports"),
+
+                api.get("/rapports", {
+                    params: {
+                        periode: "mois",
+                    }
+                }),
+
                 api.get("/emprunts"),
+
+                api.get("/rapports/mouvements", {
+                    params: {
+                        type_mouvement: "tout",
+                        periode: "mois",
+                    }
+                }),
             ]);
 
-            setCaisses(
+            // =========================
+            // CAISSES
+            // =========================
+
+            const caissesData =
                 Array.isArray(caissesRes.data)
                     ? caissesRes.data
-                    : caissesRes.data?.data ?? []
+                    : caissesRes.data?.data ?? [];
+
+            setCaisses(caissesData);
+
+
+            // =========================
+            // KPI
+            // =========================
+
+            const soldeTotal = caissesData.reduce(
+                (total, caisse) =>
+                    total + Number(caisse.solde || 0),
+                0
             );
 
-            setStats(
-                statsRes.data ?? {}
-            );
+            setStats({
+                solde_total: soldeTotal,
+
+                entrees_mois: Number(
+                    mouvementsRes.data?.total_entrees || 0
+                ),
+
+                sorties_mois: Number(
+                    mouvementsRes.data?.total_sorties || 0
+                ),
+            });
+
+
+            // =========================
+            // DEMANDES
+            // =========================
 
             setDemandes(
                 demandesRes.data?.demandes ?? []
             );
+
+
+            // =========================
+            // EMPRUNTS
+            // =========================
 
             setEmprunts(
                 Array.isArray(empruntsRes.data)
@@ -79,19 +126,26 @@ export default function SupervisorDashboard() {
                     : empruntsRes.data?.data ?? []
             );
 
-            console.log("===== EMPRUNTS =====");
-            console.log(empruntsRes.data);
+
+            // =========================
+            // DEBUG
+            // =========================
+
+            console.log("===== DASHBOARD =====");
+            console.log("Caisses :", caissesData);
+            console.log("Stats :", statsRes.data);
+            console.log("Demandes :", demandesRes.data);
+            console.log("Emprunts :", empruntsRes.data);
+            console.log("Mouvements :", mouvementsRes.data);
+            console.log("Solde total :", soldeTotal);
             console.log("====================");
 
         } catch (error) {
-
             console.error(
                 "Erreur lors du chargement du dashboard :",
-                error
+                error.response?.data ?? error
             );
-
         }
-
     }
 
 

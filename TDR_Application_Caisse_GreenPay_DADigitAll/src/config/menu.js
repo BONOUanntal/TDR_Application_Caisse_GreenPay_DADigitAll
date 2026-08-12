@@ -30,6 +30,10 @@ const menus = {
             label: "Historique",
             path: "/dashboard/superviseur/historique",
         },
+        {
+            label: "Rapport",
+            path: "/dashboard/superviseur/rapport",
+        },
     ],
 };
 
