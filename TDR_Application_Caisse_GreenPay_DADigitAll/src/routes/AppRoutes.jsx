@@ -60,6 +60,12 @@ export default function AppRoutes() {
                     element={<CashboxesPage />}
                 />
 
+                {/* Rapport (manager) */}
+                <Route
+                    path="rapport"
+                    element={<Rapport />}
+                />
+
                 {/* Dashboard superviseur */}
                 <Route
                     path="superviseur"

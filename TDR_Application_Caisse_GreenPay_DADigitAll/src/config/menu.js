@@ -19,6 +19,10 @@ const menus = {
             label: "Caisses",
             path: "/dashboard/caisses",
         },
+        {
+            label: "Rapport",
+            path: "/dashboard/rapport",
+        },
     ],
 
     superviseur: [
