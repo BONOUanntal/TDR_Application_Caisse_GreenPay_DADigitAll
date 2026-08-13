@@ -16,8 +16,6 @@ export default function DashboardHeader() {
 
             </div>
 
-            <ExportButtons />
-
         </div>
     );
 }

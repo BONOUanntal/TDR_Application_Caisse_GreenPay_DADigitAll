@@ -13,6 +13,9 @@ import DefinePasswordPage from "../pages/DefinePasswordPage";
 
 import CashboxesPage from "../pages/cashboxes/CashboxesPage";
 import Rapport from "../components/Supervisor/rapport/Rapport";
+import Employee from "../components/Supervisor/employee/Employee";
+
+import IntercashLoansPage from "../pages/loans/IntercashLoansPage";
 
 export default function AppRoutes() {
     return (
@@ -42,46 +45,65 @@ export default function AppRoutes() {
                 }
             >
 
-                {/* Dashboard selon le rôle */}
+                {/* ========================= */}
+                {/* ROUTES COMMUNES / MANAGER */}
+                {/* ========================= */}
+
                 <Route
                     index
                     element={<DashboardPage />}
                 />
 
-                {/* Historique manager */}
                 <Route
                     path="historique"
                     element={<DashboardPage />}
                 />
 
-                {/* Caisses (manager) */}
                 <Route
                     path="caisses"
                     element={<CashboxesPage />}
                 />
 
-                {/* Rapport (manager) */}
                 <Route
                     path="rapport"
                     element={<Rapport />}
                 />
 
-                {/* Dashboard superviseur */}
+                {/* Emprunts intercaisses MANAGER */}
+                <Route
+                    path="emprunts"
+                    element={<IntercashLoansPage />}
+                />
+
+
+                {/* ========================= */}
+                {/* ROUTES SUPERVISEUR */}
+                {/* ========================= */}
+
                 <Route
                     path="superviseur"
                     element={<SupervisorDashboard />}
                 />
 
-                {/* Historique superviseur */}
                 <Route
                     path="superviseur/historique"
                     element={<SupervisorDashboard />}
                 />
 
-                {/* Rapport superviseur */}
                 <Route
                     path="superviseur/rapport"
                     element={<Rapport />}
+                />
+
+                <Route
+                    path="superviseur/employes"
+                    element={<Employee />}
+                />
+
+                {/* Emprunts intercaisses SUPERVISEUR */}
+                <Route
+                    path="superviseur/emprunts"
+                    element={<IntercashLoansPage />}
                 />
 
             </Route>

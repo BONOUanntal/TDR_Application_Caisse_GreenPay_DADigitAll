@@ -23,12 +23,24 @@ const menus = {
             label: "Rapport",
             path: "/dashboard/rapport",
         },
+        {
+            label: "Emprunts intercaisses",
+            path: "/dashboard/emprunts",
+        },
     ],
 
     superviseur: [
         {
             label: "Dashboard",
             path: "/dashboard/superviseur",
+        },
+        {
+            label: "Employés",
+            path: "/dashboard/superviseur/employes",
+        },
+        {
+            label: "Emprunts intercaisses",
+            path: "/dashboard/superviseur/emprunts",
         },
         {
             label: "Historique",

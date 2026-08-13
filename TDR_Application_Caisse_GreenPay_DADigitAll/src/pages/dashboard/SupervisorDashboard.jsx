@@ -7,10 +7,7 @@ import DashboardHeader from "../../components/Supervisor/dashboard/DashboardHead
 import KPIGrid from "../../components/Supervisor/stats/KPIGrid";
 import DashboardFilters from "../../components/Supervisor/filters/DashboardFilters";
 import RequestsTable from "../../components/Supervisor/requests/RequestsTable";
-import IntercashLoans from "../../components/Supervisor/loans/IntercashLoans";
 import SupervisorHistory from "../../components/Supervisor/history/SupervisorHistory";
-import AddRequesterModal from "../../components/users/AddRequesterModal";
-
 
 export default function SupervisorDashboard() {
 
@@ -19,13 +16,9 @@ export default function SupervisorDashboard() {
     const isHistorique =
         location.pathname === "/dashboard/superviseur/historique";
 
-    const [isRequesterModalOpen, setIsRequesterModalOpen] =
-    useState(false);
-
     const [caisses, setCaisses] = useState([]);
     const [stats, setStats] = useState({});
     const [demandes, setDemandes] = useState([]);
-    const [emprunts, setEmprunts] = useState([]);
 
     const [historique, setHistorique] = useState([]);
     const [historiquePage, setHistoriquePage] = useState(1);
@@ -44,17 +37,16 @@ export default function SupervisorDashboard() {
 
 
     async function fetchDashboard() {
+
         try {
+
             const [
                 caissesRes,
-                statsRes,
                 demandesRes,
-                empruntsRes,
                 mouvementsRes,
             ] = await Promise.all([
-                api.get("/caisses"),
 
-                api.get("/rapports/tableau-de-bord"),
+                api.get("/caisses"),
 
                 api.get("/rapports", {
                     params: {
@@ -62,15 +54,15 @@ export default function SupervisorDashboard() {
                     }
                 }),
 
-                api.get("/emprunts"),
-
                 api.get("/rapports/mouvements", {
                     params: {
                         type_mouvement: "tout",
                         periode: "mois",
                     }
                 }),
+
             ]);
+
 
             // =========================
             // CAISSES
@@ -95,6 +87,7 @@ export default function SupervisorDashboard() {
             );
 
             setStats({
+
                 solde_total: soldeTotal,
 
                 entrees_mois: Number(
@@ -104,6 +97,7 @@ export default function SupervisorDashboard() {
                 sorties_mois: Number(
                     mouvementsRes.data?.total_sorties || 0
                 ),
+
             });
 
 
@@ -115,37 +109,15 @@ export default function SupervisorDashboard() {
                 demandesRes.data?.demandes ?? []
             );
 
-
-            // =========================
-            // EMPRUNTS
-            // =========================
-
-            setEmprunts(
-                Array.isArray(empruntsRes.data)
-                    ? empruntsRes.data
-                    : empruntsRes.data?.data ?? []
-            );
-
-
-            // =========================
-            // DEBUG
-            // =========================
-
-            console.log("===== DASHBOARD =====");
-            console.log("Caisses :", caissesData);
-            console.log("Stats :", statsRes.data);
-            console.log("Demandes :", demandesRes.data);
-            console.log("Emprunts :", empruntsRes.data);
-            console.log("Mouvements :", mouvementsRes.data);
-            console.log("Solde total :", soldeTotal);
-            console.log("====================");
-
         } catch (error) {
+
             console.error(
                 "Erreur lors du chargement du dashboard :",
                 error.response?.data ?? error
             );
+
         }
+
     }
 
 
@@ -157,16 +129,12 @@ export default function SupervisorDashboard() {
                 `/demandes/historique?page=${page}`
             );
 
-            console.log("===== HISTORIQUE SUPERVISEUR =====");
-            console.log("Réponse complète :", response.data);
-            console.log("Data :", response.data?.data);
-            console.log("==================================");
-
             setHistorique(
                 response.data?.data ?? []
             );
 
             setHistoriquePagination({
+
                 current_page:
                     response.data?.current_page ?? 1,
 
@@ -178,6 +146,7 @@ export default function SupervisorDashboard() {
 
                 total:
                     response.data?.total ?? 0,
+
             });
 
             setHistoriquePage(
@@ -239,30 +208,15 @@ export default function SupervisorDashboard() {
     });
 
 
-    // Seulement les 5 demandes affichées
-    // sur le dashboard principal.
     const demandesVisibles =
         filteredDemandes.slice(0, 5);
 
 
     return (
+
         <div className="space-y-6">
 
             <DashboardHeader />
-
-            {!isHistorique && (
-                <div className="flex justify-end gap-3">
-
-                    <button
-                        type="button"
-                        onClick={() => setIsRequesterModalOpen(true)}
-                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
-                    >
-                        + Ajouter un demandeur
-                    </button>
-
-                </div>
-            )}
 
             {isHistorique ? (
 
@@ -293,29 +247,8 @@ export default function SupervisorDashboard() {
                         caisses={caisses}
                     />
 
-                    <div className="grid grid-cols-3 gap-6">
-
-                        <div className="col-span-2">
-                            <RequestsTable
-                                demandes={demandesVisibles}
-                            />
-                        </div>
-
-                        <IntercashLoans
-                            emprunts={emprunts}
-                        />
-
-                    </div>
-
-                    <AddRequesterModal
-                        isOpen={isRequesterModalOpen}
-                        onClose={() =>
-                            setIsRequesterModalOpen(false)
-                        }
-                        onSuccess={async () => {
-                            setIsRequesterModalOpen(false);
-                            await fetchDashboard();
-                        }}
+                    <RequestsTable
+                        demandes={demandesVisibles}
                     />
 
                 </>
@@ -323,5 +256,7 @@ export default function SupervisorDashboard() {
             )}
 
         </div>
+
     );
+
 }
