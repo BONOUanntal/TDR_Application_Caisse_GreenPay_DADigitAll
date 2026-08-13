@@ -7,6 +7,14 @@ export default function Sidebar() {
 
     const menu = menus[auth?.role] || [];
 
+    function estLienRacine(path) {
+        return menu.some(
+            (autre) =>
+                autre.path !== path &&
+                autre.path.startsWith(path + "/")
+        );
+    }
+
     return (
         <aside className="w-64 bg-gray-900 text-white p-6">
 
@@ -26,7 +34,7 @@ export default function Sidebar() {
                     <NavLink
                         key={item.path}
                         to={item.path}
-                        end={item.path === "/dashboard"}
+                        end={estLienRacine(item.path)}
                         className={({ isActive }) =>
                             `block px-4 py-3 rounded-lg transition ${
                                 isActive

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import api from "../../services/api";
 
-import IntercashLoans from "../../components/Supervisor/loans/IntercashLoans";
+import LoanList from "../../components/manager/loans/LoanList";
 
 export default function IntercashLoansPage() {
 
@@ -47,6 +47,31 @@ export default function IntercashLoansPage() {
     }
 
 
+    async function handleRepay(id) {
+
+        try {
+
+            await api.post(`/emprunts/${id}/rembourser`);
+
+            await fetchEmprunts();
+
+        } catch (error) {
+
+            console.error(
+                "Erreur remboursement emprunt :",
+                error.response?.data ?? error
+            );
+
+            alert(
+                error.response?.data?.message ||
+                "Impossible de régulariser cet emprunt."
+            );
+
+        }
+
+    }
+
+
     useEffect(() => {
 
         fetchEmprunts();
@@ -58,10 +83,6 @@ export default function IntercashLoansPage() {
 
         <div className="space-y-6">
 
-            {/* ========================= */}
-            {/* EN-TÊTE */}
-            {/* ========================= */}
-
             <div>
 
                 <h1 className="text-2xl font-bold text-gray-800">
@@ -69,27 +90,10 @@ export default function IntercashLoansPage() {
                 </h1>
 
                 <p className="mt-1 text-gray-500">
-                    Consultez les échanges financiers entre les différentes caisses.
+                    Consultez et régularisez les échanges financiers entre les différentes caisses.
                 </p>
 
             </div>
-
-
-            {/* ========================= */}
-            {/* CONTENU */}
-            {/* ========================= */}
-
-            {loading && (
-
-                <div className="rounded-lg bg-white p-6 shadow-sm">
-
-                    <p className="text-gray-500">
-                        Chargement des emprunts intercaisses...
-                    </p>
-
-                </div>
-
-            )}
 
 
             {!loading && error && (
@@ -113,11 +117,17 @@ export default function IntercashLoansPage() {
             )}
 
 
-            {!loading && !error && (
+            {(!error) && (
 
-                <IntercashLoans
-                    emprunts={emprunts}
-                />
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+
+                    <LoanList
+                        emprunts={emprunts}
+                        onRepay={handleRepay}
+                        loading={loading}
+                    />
+
+                </div>
 
             )}
 

@@ -6,8 +6,20 @@ export default function Rapport() {
     const [entreprises, setEntreprises] = useState([]);
 
     const [periode, setPeriode] = useState("mois");
-    const [dateDebut, setDateDebut] = useState("");
-    const [dateFin, setDateFin] = useState("");
+    const [dateDebutJour, setDateDebutJour] = useState("");
+    const [dateDebutMois, setDateDebutMois] = useState("");
+    const [dateDebutAnnee, setDateDebutAnnee] = useState("");
+    const [dateFinJour, setDateFinJour] = useState("");
+    const [dateFinMois, setDateFinMois] = useState("");
+    const [dateFinAnnee, setDateFinAnnee] = useState("");
+
+    const dateDebut = dateDebutJour && dateDebutMois && dateDebutAnnee
+        ? `${dateDebutAnnee}-${String(dateDebutMois).padStart(2, "0")}-${String(dateDebutJour).padStart(2, "0")}`
+        : "";
+
+    const dateFin = dateFinJour && dateFinMois && dateFinAnnee
+        ? `${dateFinAnnee}-${String(dateFinMois).padStart(2, "0")}-${String(dateFinJour).padStart(2, "0")}`
+        : "";
     const [entrepriseId, setEntrepriseId] = useState("");
     const [type, setType] = useState("tout");
 
@@ -277,25 +289,81 @@ export default function Rapport() {
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Date de début
                                 </label>
-                                <input
-                                    type="date"
-                                    value={dateDebut}
-                                    onChange={(e) => setDateDebut(e.target.value)}
-                                    className="w-full rounded-lg border border-gray-300 px-3 py-2"
-                                    required
-                                />
+                                <div className="flex gap-2">
+                                    <select
+                                        value={dateDebutJour}
+                                        onChange={(e) => setDateDebutJour(e.target.value)}
+                                        className="w-1/3 rounded-lg border border-gray-300 px-2 py-2"
+                                        required
+                                    >
+                                        <option value="">Jour</option>
+                                        {Array.from({ length: 31 }, (_, i) => i + 1).map((j) => (
+                                            <option key={j} value={j}>{j}</option>
+                                        ))}
+                                    </select>
+                                    <select
+                                        value={dateDebutMois}
+                                        onChange={(e) => setDateDebutMois(e.target.value)}
+                                        className="w-1/3 rounded-lg border border-gray-300 px-2 py-2"
+                                        required
+                                    >
+                                        <option value="">Mois</option>
+                                        {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                                            <option key={m} value={m}>{m}</option>
+                                        ))}
+                                    </select>
+                                    <select
+                                        value={dateDebutAnnee}
+                                        onChange={(e) => setDateDebutAnnee(e.target.value)}
+                                        className="w-1/3 rounded-lg border border-gray-300 px-2 py-2"
+                                        required
+                                    >
+                                        <option value="">Année</option>
+                                        {Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i).map((a) => (
+                                            <option key={a} value={a}>{a}</option>
+                                        ))}
+                                    </select>
+                                </div>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Date de fin
                                 </label>
-                                <input
-                                    type="date"
-                                    value={dateFin}
-                                    onChange={(e) => setDateFin(e.target.value)}
-                                    className="w-full rounded-lg border border-gray-300 px-3 py-2"
-                                    required
-                                />
+                                <div className="flex gap-2">
+                                    <select
+                                        value={dateFinJour}
+                                        onChange={(e) => setDateFinJour(e.target.value)}
+                                        className="w-1/3 rounded-lg border border-gray-300 px-2 py-2"
+                                        required
+                                    >
+                                        <option value="">Jour</option>
+                                        {Array.from({ length: 31 }, (_, i) => i + 1).map((j) => (
+                                            <option key={j} value={j}>{j}</option>
+                                        ))}
+                                    </select>
+                                    <select
+                                        value={dateFinMois}
+                                        onChange={(e) => setDateFinMois(e.target.value)}
+                                        className="w-1/3 rounded-lg border border-gray-300 px-2 py-2"
+                                        required
+                                    >
+                                        <option value="">Mois</option>
+                                        {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                                            <option key={m} value={m}>{m}</option>
+                                        ))}
+                                    </select>
+                                    <select
+                                        value={dateFinAnnee}
+                                        onChange={(e) => setDateFinAnnee(e.target.value)}
+                                        className="w-1/3 rounded-lg border border-gray-300 px-2 py-2"
+                                        required
+                                    >
+                                        <option value="">Année</option>
+                                        {Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i).map((a) => (
+                                            <option key={a} value={a}>{a}</option>
+                                        ))}
+                                    </select>
+                                </div>
                             </div>
                         </>
                     )}
