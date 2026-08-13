@@ -52,12 +52,7 @@ export default function AddRequesterModal({
                 ? postesResponse.data
                 : postesResponse.data?.data ?? [];
 
-            // On garde uniquement les postes DEMANDEUR
-            const postesDemandeurs = postesData.filter(
-                (poste) => poste.role === "demandeur"
-            );
-
-            setPostes(postesDemandeurs);
+            setPostes(postesData);
 
             // -------------------------
             // ENTREPRISES
@@ -71,7 +66,7 @@ export default function AddRequesterModal({
 
             setEntreprises(entreprisesData);
 
-            console.log("Postes demandeurs :", postesDemandeurs);
+            console.log("Postes disponibles :", postesData);
             console.log("Entreprises :", entreprisesData);
 
         } catch (err) {
@@ -127,7 +122,7 @@ export default function AddRequesterModal({
             });
 
             setSuccess(
-                "Le demandeur a été créé. Un email lui a été envoyé pour définir son mot de passe."
+                "L'utilisateur a été créé. Un email lui a été envoyé pour définir son mot de passe."
             );
 
             setForm({
@@ -144,7 +139,7 @@ export default function AddRequesterModal({
 
         } catch (err) {
             console.error(
-                "Erreur création demandeur :",
+                "Erreur création utilisateur :",
                 err
             );
 
@@ -347,7 +342,7 @@ export default function AddRequesterModal({
 
                                 {postes.length === 0 && (
                                     <p className="text-xs text-red-500 mt-1">
-                                        Aucun poste demandeur disponible.
+                                        Aucun poste utilisateur disponible.
                                     </p>
                                 )}
                             </div>
@@ -411,7 +406,7 @@ export default function AddRequesterModal({
                                 >
                                     {loading
                                         ? "Création..."
-                                        : "Créer le demandeur"}
+                                        : "Créer l'utilisateur"}
                                 </button>
 
                             </div>

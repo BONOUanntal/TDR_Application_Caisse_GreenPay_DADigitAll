@@ -481,7 +481,7 @@ export default function ManagerDashboard() {
                             onClick={() => setIsRequesterModalOpen(true)}
                             className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
                         >
-                            + Ajouter un demandeur
+                            + Ajouter un utilisateur
                         </button>
 
                     </div>

@@ -71,7 +71,6 @@ export default function IntercashLoansPage() {
 
     }
 
-
     useEffect(() => {
 
         fetchEmprunts();
