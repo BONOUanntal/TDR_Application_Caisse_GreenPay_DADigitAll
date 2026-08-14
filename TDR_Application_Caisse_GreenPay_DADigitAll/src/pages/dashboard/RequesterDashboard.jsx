@@ -50,16 +50,6 @@ export default function RequesterDashboard() {
                 response.data
             );
 
-
-            // Laravel paginate() retourne :
-            //
-            // {
-            //     data: [...],
-            //     current_page: 1,
-            //     last_page: 2,
-            //     ...
-            // }
-
             setRequests(
                 Array.isArray(response.data)
                     ? response.data
@@ -230,7 +220,7 @@ export default function RequesterDashboard() {
 
             {requestsPagination.last_page > 1 && (
 
-                <div className="flex items-center justify-center gap-2 pt-6">
+                <div className="flex items-center justify-center gap-2 pt-6 flex-wrap">
 
                     <button
                         type="button"
