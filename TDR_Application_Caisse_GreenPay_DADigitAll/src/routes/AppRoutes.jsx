@@ -69,6 +69,12 @@ export default function AppRoutes() {
                     element={<Rapport />}
                 />
 
+                {/* Utilisateurs (commune) */}
+                <Route
+                    path="utilisateurs"
+                    element={<Employee />}
+                />
+
                 {/* Emprunts intercaisses MANAGER */}
                 <Route
                     path="emprunts"
@@ -93,11 +99,6 @@ export default function AppRoutes() {
                 <Route
                     path="superviseur/rapport"
                     element={<Rapport />}
-                />
-
-                <Route
-                    path="superviseur/employes"
-                    element={<Employee />}
                 />
 
                 {/* Emprunts intercaisses SUPERVISEUR */}

@@ -2,12 +2,15 @@ import { useEffect, useState } from "react";
 import api from "../../../services/api";
 import AddRequesterModal from "../../users/AddRequesterModal";
 
+const PAR_PAGE = 10;
+
 export default function Employee() {
 
     const [employees, setEmployees] = useState([]);
     const [entreprises, setEntreprises] = useState([]);
 
     const [entreprise, setEntreprise] = useState("Toutes");
+    const [page, setPage] = useState(1);
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -112,6 +115,28 @@ export default function Employee() {
 
 
     // =========================
+    // PAGINATION (frontend)
+    // =========================
+
+    const totalPages = Math.max(
+        1,
+        Math.ceil(filteredEmployees.length / PAR_PAGE)
+    );
+
+    const employeesPage = filteredEmployees.slice(
+        (page - 1) * PAR_PAGE,
+        page * PAR_PAGE
+    );
+
+    // Revenir à la page 1 quand le filtre change
+    useEffect(() => {
+
+        setPage(1);
+
+    }, [entreprise]);
+
+
+    // =========================
     // AJOUT EMPLOYÉ
     // =========================
 
@@ -152,7 +177,7 @@ export default function Employee() {
                     }
                     className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
                 >
-                    + Ajouter un demandeur
+                    + Ajouter un utilisateur
                 </button>
 
             </div>
@@ -219,96 +244,157 @@ export default function Employee() {
 
             ) : (
 
-                <div className="bg-white rounded-xl shadow overflow-hidden">
+                <>
 
-                    {/* TABLE */}
+                    <div className="bg-white rounded-xl shadow overflow-hidden overflow-x-auto">
 
-                    <table className="w-full">
+                        {/* TABLE */}
 
-                        <thead className="bg-gray-50">
+                        <table className="w-full">
 
-                            <tr>
-
-                                <th className="text-left px-6 py-4">
-                                    Nom
-                                </th>
-
-                                <th className="text-left px-6 py-4">
-                                    Email
-                                </th>
-
-                                <th className="text-left px-6 py-4">
-                                    Téléphone
-                                </th>
-
-                                <th className="text-left px-6 py-4">
-                                    Poste
-                                </th>
-
-                                <th className="text-left px-6 py-4">
-                                    Entreprise
-                                </th>
-
-                            </tr>
-
-                        </thead>
-
-
-                        <tbody>
-
-                            {filteredEmployees.length === 0 ? (
+                            <thead className="bg-gray-50">
 
                                 <tr>
 
-                                    <td
-                                        colSpan="5"
-                                        className="px-6 py-8 text-center text-gray-500"
-                                    >
-                                        Aucun employé trouvé.
-                                    </td>
+                                    <th className="text-left px-6 py-4">
+                                        Nom
+                                    </th>
+
+                                    <th className="text-left px-6 py-4">
+                                        Email
+                                    </th>
+
+                                    <th className="text-left px-6 py-4">
+                                        Téléphone
+                                    </th>
+
+                                    <th className="text-left px-6 py-4">
+                                        Poste
+                                    </th>
+
+                                    <th className="text-left px-6 py-4">
+                                        Entreprise
+                                    </th>
 
                                 </tr>
 
-                            ) : (
+                            </thead>
 
-                                filteredEmployees.map((employee) => (
 
-                                    <tr
-                                        key={employee.id}
-                                        className="border-t hover:bg-gray-50"
-                                    >
+                            <tbody>
 
-                                        <td className="px-6 py-4 font-medium">
-                                            {employee.name}
-                                        </td>
+                                {employeesPage.length === 0 ? (
 
-                                        <td className="px-6 py-4">
-                                            {employee.email}
-                                        </td>
+                                    <tr>
 
-                                        <td className="px-6 py-4">
-                                            {employee.telephone_whatsapp ?? "-"}
-                                        </td>
-
-                                        <td className="px-6 py-4">
-                                            {employee.poste?.nom ?? "-"}
-                                        </td>
-
-                                        <td className="px-6 py-4">
-                                            {employee.entreprise?.nom ?? "-"}
+                                        <td
+                                            colSpan="5"
+                                            className="px-6 py-8 text-center text-gray-500"
+                                        >
+                                            Aucun employé trouvé.
                                         </td>
 
                                     </tr>
 
-                                ))
+                                ) : (
 
-                            )}
+                                    employeesPage.map((employee) => (
 
-                        </tbody>
+                                        <tr
+                                            key={employee.id}
+                                            className="border-t hover:bg-gray-50"
+                                        >
 
-                    </table>
+                                            <td className="px-6 py-4 font-medium">
+                                                {employee.name}
+                                            </td>
 
-                </div>
+                                            <td className="px-6 py-4">
+                                                {employee.email}
+                                            </td>
+
+                                            <td className="px-6 py-4">
+                                                {employee.telephone_whatsapp ?? "-"}
+                                            </td>
+
+                                            <td className="px-6 py-4">
+                                                {employee.poste?.nom ?? "-"}
+                                            </td>
+
+                                            <td className="px-6 py-4">
+                                                {employee.entreprise?.nom ?? "-"}
+                                            </td>
+
+                                        </tr>
+
+                                    ))
+
+                                )}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                    {/* PAGINATION */}
+
+                    {totalPages > 1 && (
+
+                        <div className="flex items-center justify-center gap-2 pt-2 flex-wrap">
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setPage((p) => Math.max(1, p - 1))
+                                }
+                                disabled={page === 1}
+                                className="px-4 py-2 border rounded-lg
+                                        disabled:opacity-40
+                                        disabled:cursor-not-allowed
+                                        hover:bg-gray-50"
+                            >
+                                Précédent
+                            </button>
+
+                            {Array.from(
+                                { length: totalPages },
+                                (_, index) => index + 1
+                            ).map((p) => (
+                                <button
+                                    type="button"
+                                    key={p}
+                                    onClick={() => setPage(p)}
+                                    className={`min-w-10 px-3 py-2 rounded-lg ${
+                                        page === p
+                                            ? "bg-blue-600 text-white"
+                                            : "border hover:bg-gray-50"
+                                    }`}
+                                >
+                                    {p}
+                                </button>
+                            ))}
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setPage((p) => Math.min(totalPages, p + 1))
+                                }
+                                disabled={page === totalPages}
+                                className="px-4 py-2 border rounded-lg
+                                        disabled:opacity-40
+                                        disabled:cursor-not-allowed
+                                        hover:bg-gray-50"
+                            >
+                                Suivant
+                            </button>
+
+                        </div>
+
+                    )}
+
+                </>
 
             )}
 

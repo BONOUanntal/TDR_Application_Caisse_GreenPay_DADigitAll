@@ -12,20 +12,24 @@ const menus = {
             path: "/dashboard",
         },
         {
-            label: "Historique",
-            path: "/dashboard/historique",
-        },
-        {
             label: "Caisses",
             path: "/dashboard/caisses",
         },
         {
-            label: "Rapport",
-            path: "/dashboard/rapport",
-        },
-        {
             label: "Emprunts intercaisses",
             path: "/dashboard/emprunts",
+        },
+        {
+            label: "Utilisateurs",
+            path: "/dashboard/utilisateurs",
+        },
+        {
+            label: "Historique",
+            path: "/dashboard/historique",
+        },
+        {
+            label: "Rapport",
+            path: "/dashboard/rapport",
         },
     ],
 
@@ -35,8 +39,8 @@ const menus = {
             path: "/dashboard/superviseur",
         },
         {
-            label: "Employés",
-            path: "/dashboard/superviseur/employes",
+            label: "Utilisateurs",
+            path: "/dashboard/utilisateurs",
         },
         {
             label: "Emprunts intercaisses",
